@@ -274,32 +274,6 @@ Minecraft 1.20.1 Forge 硬核撤離射擊模組。
 
 也就是說，很多未來擴充可以直接靠 JSON / KubeJS 完成，不一定要先寫 Java。
 
-## 建置與執行
-
-### 本機建置
-
-```bash
-./gradlew build
-```
-
-Windows 可以用：
-
-```bat
-gradlew.bat build
-```
-
-### 開發啟動
-
-```bash
-./gradlew runClient
-```
-
-### 資料生成
-
-```bash
-./gradlew runData
-```
-
 ## 目前專案狀態
 
 目前這個 mod 已經不是單純的骨架，而是有以下可用成果：
