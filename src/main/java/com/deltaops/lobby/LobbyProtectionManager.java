@@ -24,12 +24,12 @@ public class LobbyProtectionManager {
         if (!(event.player instanceof ServerPlayer player)) {
             return;
         }
-        if (!LobbyArea.isInLobby(player)) {
-            return;
+        // 大廳保護
+        if (LobbyArea.isInLobby(player)) {
+            player.getFoodData().setFoodLevel(20);
+            player.getFoodData().setSaturation(20.0F);
+            player.getFoodData().setExhaustion(0.0F);
         }
-        player.getFoodData().setFoodLevel(20);
-        player.getFoodData().setSaturation(20.0F);
-        player.getFoodData().setExhaustion(0.0F);
     }
 
     @SubscribeEvent
