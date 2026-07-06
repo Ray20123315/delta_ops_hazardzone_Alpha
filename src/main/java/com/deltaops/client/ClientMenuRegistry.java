@@ -10,6 +10,9 @@ import com.deltaops.loot.AdminItemTaggingMenu;
 import com.deltaops.loot.AdminItemTaggingScreen;
 import com.deltaops.screen.ModMenuTypes;
 import com.deltaops.screen.SecureBoxScreen;
+import com.deltaops.shop.TraderScreen;
+import com.deltaops.weapon.WeaponWorkbenchScreen;
+import com.deltaops.combat.WeaponConfigScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,5 +25,8 @@ public class ClientMenuRegistry {
     public static void onClientSetup(FMLClientSetupEvent event) {
         MenuScreens.register(ModMenuTypes.SECURE_BOX.get(), SecureBoxScreen::new);
         MenuScreens.register(ModMenuTypes.ADMIN_ITEM_TAGGING.get(), AdminItemTaggingScreen::new);
+        MenuScreens.register(ModMenuTypes.TRADER.get(), TraderScreen::new);
+        MenuScreens.register(ModMenuTypes.WEAPON_WORKBENCH.get(), WeaponWorkbenchScreen::new);
+        MenuScreens.register(ModMenuTypes.WEAPON_CONFIG.get(), WeaponConfigScreen::new);
     }
 }

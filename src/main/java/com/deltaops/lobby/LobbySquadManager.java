@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 public class LobbySquadManager {
     private static final Map<UUID, Squad> SQUADS = new ConcurrentHashMap<>();
     private static final Map<UUID, UUID> PLAYER_TO_SQUAD = new ConcurrentHashMap<>();
-    private static final int DEFAULT_LIMIT = 4;
+    private static final int DEFAULT_LIMIT = 3;
 
     public static Squad createSquad(ServerPlayer player) {
         if (player == null) return null;
@@ -123,6 +123,30 @@ public class LobbySquadManager {
         if (s == null) return;
         s.fillTeammates = !s.fillTeammates;
         player.sendSystemMessage(Component.literal("自動配對: " + (s.fillTeammates ? "已啟用" : "已停用")));
+
+        // 更新配對佇列並通知客戶端
+        if (s.fillTeammates) {
+            MatchmakingEngine.enqueueSquad(squadId);
+        }
+        // 發送佇列狀態給小隊所有成員
+        broadcastMatchStatus(s);
+    }
+
+    /**
+     * 發送 ClientboundMatchStatusPacket 給小隊所有成員。
+     */
+    public static void broadcastMatchStatus(Squad squad) {
+        if (squad == null) return;
+        int queued = MatchmakingEngine.getQueuedPlayerCount();
+        boolean matchOpen = MatchmakingEngine.isAnyQueued();
+        var packet = new com.deltaops.network.ClientboundMatchStatusPacket(queued, matchOpen);
+        for (UUID member : squad.members) {
+            ServerPlayer p = getServerPlayerByUuid(member);
+            if (p != null) {
+                com.deltaops.network.ModNetwork.CHANNEL.send(
+                        net.minecraftforge.network.PacketDistributor.PLAYER.with(() -> p), packet);
+            }
+        }
     }
 
     public static boolean toggleReady(ServerPlayer player) {
@@ -154,8 +178,31 @@ public class LobbySquadManager {
             leader.sendSystemMessage(net.minecraft.network.chat.Component.literal("發車失敗：並非所有隊員皆已準備。"));
             return false;
         }
+
+        // 檢查地圖與人數限制
+        String mapId = squad.mapId;
+        if (mapId == null || mapId.isBlank()) {
+            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c請先選擇地圖再發車！"));
+            return false;
+        }
+        MapDefinition mapDef = HazardMapRegistry.getMap(mapId);
+        if (mapDef == null) {
+            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c地圖不存在：" + mapId));
+            return false;
+        }
+        if (squad.members.size() < mapDef.minPlayers()) {
+            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                    "§c玩家人數不足！地圖 [" + mapDef.displayName() + "] 最少需 " + mapDef.minPlayers() + " 人。"));
+            return false;
+        }
+        if (squad.members.size() > mapDef.maxPlayers()) {
+            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                    "§c玩家人數過多！地圖 [" + mapDef.displayName() + "] 最多 " + mapDef.maxPlayers() + " 人。"));
+            return false;
+        }
+
         List<ServerPlayer> players = gatherPlayersFromSquad(squad);
-        MatchmakingEngine.launchMatch(players, null);
+        MatchmakingEngine.launchMatch(players, mapId, leader);
         return true;
     }
 

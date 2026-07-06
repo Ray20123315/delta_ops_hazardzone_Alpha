@@ -13,10 +13,10 @@ public class HazardMapRegistry {
 
     static {
         Map<String, MapDefinition> map = new LinkedHashMap<>();
-        map.put("zero_dam", new MapDefinition("zero_dam", "零號大壩", 0));
-        map.put("longbow_valley", new MapDefinition("longbow_valley", "長弓溪谷", 30000));
-        map.put("space_base_confidential", new MapDefinition("space_base_confidential", "航天基地(機密)", 187500));
-        map.put("space_base_top_secret", new MapDefinition("space_base_top_secret", "航天基地(絕密)", 600000));
+        map.put("zero_dam", new MapDefinition("zero_dam", "零號大壩", 0, 15, 18));
+        map.put("longbow_valley", new MapDefinition("longbow_valley", "長弓溪谷", 30000, 18, 24));
+        map.put("space_base_confidential", new MapDefinition("space_base_confidential", "航天基地(機密)", 187500, 16, 19));
+        map.put("space_base_top_secret", new MapDefinition("space_base_top_secret", "航天基地(絕密)", 600000, 16, 18));
         MAPS = Collections.unmodifiableMap(map);
     }
 

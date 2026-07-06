@@ -6,6 +6,7 @@
 package com.deltaops.lobby;
 
 import com.deltaops.DeltaOpsMod;
+import com.deltaops.config.ModConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -65,6 +66,18 @@ public class EconomyManager {
             if (Files.exists(STORAGE_PATH)) {
                 String json = Files.readString(STORAGE_PATH, StandardCharsets.UTF_8);
                 if (!json.isBlank()) {
+                    // 第二層防線攔截：HMAC 簽名驗證
+                    if (!com.deltaops.security.HMACConfigManager.verifyConfig(STORAGE_PATH)) {
+                        DeltaOpsMod.LOGGER.error("⛔╔═══════════════════════════════════════════════╗");
+                        DeltaOpsMod.LOGGER.error("⛔║  item_prices.json 簽名驗證失敗！          ║");
+                        DeltaOpsMod.LOGGER.error("⛔║  檔案可能已被非法篡改！                    ║");
+                        DeltaOpsMod.LOGGER.error("⛔║  正在還原為系統安全預設值...               ║");
+                        DeltaOpsMod.LOGGER.error("⛔╚═══════════════════════════════════════════════╝");
+                        ITEM_PRICES.clear();
+                        // 嘗試從內建預設值還原
+                        loadDefaultPrices();
+                        return;
+                    }
                     Map<String, Long> loaded = GSON.fromJson(json, PRICE_MAP_TYPE);
                     if (loaded != null) {
                         ITEM_PRICES.clear();
@@ -74,6 +87,28 @@ public class EconomyManager {
             }
         } catch (IOException e) {
             DeltaOpsMod.LOGGER.error("Failed to load item prices", e);
+        }
+    }
+
+    /**
+     * 從內建資源載入預設物價表（安全還原）。
+     */
+    private static void loadDefaultPrices() {
+        try (InputStream stream = EconomyManager.class.getResourceAsStream(DEFAULT_RESOURCE)) {
+            if (stream == null) {
+                DeltaOpsMod.LOGGER.error("⛔ [Delta Ops] 無法載入內建預設物價表！物價系統為空！");
+                return;
+            }
+            String json = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+            if (!json.isBlank()) {
+                Map<String, Long> loaded = GSON.fromJson(json, PRICE_MAP_TYPE);
+                if (loaded != null) {
+                    ITEM_PRICES.putAll(loaded);
+                    DeltaOpsMod.LOGGER.warn("⚠️ [Delta Ops] 已從內建預設值還原物價表 ({} 項)", loaded.size());
+                }
+            }
+        } catch (IOException e) {
+            DeltaOpsMod.LOGGER.error("⛔ [Delta Ops] 載入內建預設物價表失敗", e);
         }
     }
 
@@ -94,6 +129,8 @@ public class EconomyManager {
         try {
             Files.createDirectories(STORAGE_PATH.getParent());
             Files.writeString(STORAGE_PATH, GSON.toJson(ITEM_PRICES), StandardCharsets.UTF_8);
+            // 寫入後自動簽名
+            com.deltaops.security.HMACConfigManager.signConfig(STORAGE_PATH);
         } catch (IOException e) {
             DeltaOpsMod.LOGGER.error("Failed to save item prices", e);
         }
@@ -107,6 +144,14 @@ public class EconomyManager {
     }
 
     public static void addBalance(ServerPlayer player, long amount) {
+        // 第一層防線攔截：代碼完整性驗證失敗時全面鎖死經濟
+        if (com.deltaops.security.CodeIntegrityValidator.getStatus()
+                == com.deltaops.security.CodeIntegrityValidator.IntegrityStatus.INVALID) {
+            DeltaOpsMod.LOGGER.error("⛔ [Delta Ops] 經濟系統已鎖死：核心代碼完整性驗證失敗！");
+            DeltaOpsMod.LOGGER.error("⛔ [Delta Ops] 拒絕執行 addBalance(" + amount + ") 給予玩家 " + player.getName().getString());
+            return;
+        }
+
         if (player == null || amount == 0L) {
             return;
         }
@@ -147,6 +192,10 @@ public class EconomyManager {
         return ITEM_PRICES.getOrDefault(registryName.toString(), 0L);
     }
 
+    public static int getItemCount() {
+        return ITEM_PRICES.size();
+    }
+
     public static long settleExtraction(ServerPlayer player, String mapName) {
         if (player == null) {
             return 0L;
@@ -159,7 +208,8 @@ public class EconomyManager {
                 bonus = Math.max(0L, mapDefinition.minGearValue() / 10L);
             }
         }
-        long reward = Math.max(0L, value + bonus);
+        double mult = ModConfig.getRewardMultiplier();
+        long reward = Math.max(0L, (long) ((value + bonus) * mult));
         if (reward > 0L) {
             addBalance(player, reward);
         }

@@ -5,6 +5,7 @@
  */
 package com.deltaops.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -30,7 +31,10 @@ public class ClientboundMatchStatusPacket {
 
     public static void handle(ClientboundMatchStatusPacket packet, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            // 客戶端可在這裡更新 UI / HUD 狀態。
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.screen instanceof com.deltaops.client.matchmaking.MatchmakingScreen screen) {
+                screen.updateQueueStatus(packet.queuedPlayers, packet.matchOpen);
+            }
         });
         ctx.get().setPacketHandled(true);
     }

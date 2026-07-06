@@ -44,14 +44,34 @@ public class ZoneSelectionManager {
     public static Optional<BlockPos> getPos2(UUID player) { return Optional.ofNullable(POS2.get(player)); }
 
     public static void saveZone(String name, SearchPriority priority, UUID owner) {
+        saveZone(name, priority, owner, null);
+    }
+
+    public static void saveZone(String name, SearchPriority priority, UUID owner, String mapId) {
         if (name == null || name.isBlank()) return;
         BlockPos a = POS1.get(owner);
         BlockPos b = POS2.get(owner);
         if (a == null || b == null) return;
         Zone z = new Zone(name, a, b, priority);
+        z.mapId = (mapId != null && !mapId.isBlank()) ? mapId : "";
         Map<String, Zone> zones = loadZonesMap();
         zones.put(name, z);
         writeZones(zones);
+    }
+
+    /**
+     * 載入指定地圖的所有 Zone。
+     */
+    public static Map<String, Zone> loadZonesForMap(String mapId) {
+        Map<String, Zone> all = loadZonesMap();
+        if (mapId == null || mapId.isBlank()) return all;
+        Map<String, Zone> result = new LinkedHashMap<>();
+        for (Map.Entry<String, Zone> entry : all.entrySet()) {
+            if (entry.getValue().mapId != null && entry.getValue().mapId.equals(mapId)) {
+                result.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return result;
     }
 
     public static Map<String, Zone> loadZonesMap() {
@@ -79,6 +99,7 @@ public class ZoneSelectionManager {
         public BlockPos a;
         public BlockPos b;
         public SearchPriority priority;
+        public String mapId; // 綁定地圖 ID，空字串表示所有地圖通用
 
         public Zone() {}
 
@@ -87,6 +108,7 @@ public class ZoneSelectionManager {
             this.a = a;
             this.b = b;
             this.priority = priority;
+            this.mapId = "";
         }
 
         public BlockPos min() {

@@ -7,6 +7,9 @@ import com.deltaops.loot.AdminItemTaggingMenu;
 import com.deltaops.securebox.SecureBoxCapabilityManager;
 import com.deltaops.securebox.SecureBoxMenu;
 import com.deltaops.container.ContainerVariant;
+import com.deltaops.shop.TraderMenu;
+import com.deltaops.weapon.WeaponWorkbenchMenu;
+import com.deltaops.combat.WeaponConfigMenu;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -36,5 +39,12 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<AdminConfigMenu>> ADMIN_CONFIG =
             MENU_TYPES.register("admin_config", () -> IForgeMenuType.create((id, inv, data) -> new AdminConfigMenu(id, inv)));
 
+    public static final RegistryObject<MenuType<TraderMenu>> TRADER =
+            MENU_TYPES.register("trader", () -> IForgeMenuType.create((id, inv, data) -> new TraderMenu(id, inv)));
 
+    public static final RegistryObject<MenuType<WeaponWorkbenchMenu>> WEAPON_WORKBENCH =
+            MENU_TYPES.register("weapon_workbench", () -> IForgeMenuType.create((id, inv, data) -> new WeaponWorkbenchMenu(id, inv)));
+
+    public static final RegistryObject<MenuType<WeaponConfigMenu>> WEAPON_CONFIG =
+            MENU_TYPES.register("weapon_config", () -> IForgeMenuType.create((id, inv, data) -> new WeaponConfigMenu(id, inv)));
 }

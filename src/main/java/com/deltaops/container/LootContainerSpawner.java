@@ -19,10 +19,38 @@ import java.util.Random;
 import com.deltaops.zone.ZoneSelectionManager;
 import com.deltaops.zone.ZoneSelectionManager.Zone;
 import com.deltaops.zone.ZoneSelectionManager.SearchPriority;
+import com.deltaops.block.ModBlocks;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 
 public class LootContainerSpawner {
     private static final Random RANDOM = new Random();
+
+    /**
+     * 清除指定 AABB 範圍內所有 TacticalContainer，
+     * 並將該位置還原為空氣。
+     */
+    public static void clearAllContainersInZone(ServerLevel level, AABB zone) {
+        if (level == null || zone == null) return;
+        int minX = (int) Math.floor(zone.minX);
+        int minY = (int) Math.floor(zone.minY);
+        int minZ = (int) Math.floor(zone.minZ);
+        int maxX = (int) Math.ceil(zone.maxX);
+        int maxY = (int) Math.ceil(zone.maxY);
+        int maxZ = (int) Math.ceil(zone.maxZ);
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    BlockState state = level.getBlockState(pos);
+                    if (state.is(ModBlocks.TACTICAL_CONTAINER.get())) {
+                        level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                    }
+                }
+            }
+        }
+    }
 
     public static void spawnFixedHighValue(ServerLevel level, BlockPos pos, ContainerVariant variant) {
         if (level == null || pos == null) {

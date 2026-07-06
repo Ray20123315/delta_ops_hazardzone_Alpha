@@ -7,6 +7,7 @@ package com.deltaops.extraction;
 
 import com.deltaops.DeltaOpsMod;
 import com.deltaops.block.ModBlocks;
+import com.deltaops.config.ModConfig;
 import com.deltaops.loading.LoadingScreenManager;
 import com.deltaops.lobby.EconomyManager;
 import com.deltaops.team.LobbyManager;
@@ -28,8 +29,11 @@ import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = DeltaOpsMod.MOD_ID)
 public class ExtractionHandler {
-    private static final int EXTRACTION_TICKS = 10 * 20;
     private static final Map<UUID, Integer> extracting = new HashMap<>();
+
+    private static int getExtractionTicks() {
+        return ModConfig.getExtractionTimerSeconds() * 20;
+    }
 
     public static boolean isInExtractionZone(Player player) {
         if (player == null || player.level().isClientSide) {
@@ -48,7 +52,7 @@ public class ExtractionHandler {
         UUID uuid = player.getUUID();
 
         if (isInExtractionZone(player)) {
-            int ticks = extracting.getOrDefault(uuid, EXTRACTION_TICKS) - 1;
+            int ticks = extracting.getOrDefault(uuid, getExtractionTicks()) - 1;
             extracting.put(uuid, ticks);
 
             if (ticks % 20 == 0 || ticks <= 20) {

@@ -39,21 +39,39 @@ public class ZoneCommand {
 
         var create = Commands.literal("create")
                 .then(Commands.argument("name", StringArgumentType.string())
-                        .then(Commands.argument("priority", StringArgumentType.string()).executes(ctx -> {
-                            ServerPlayer p = ctx.getSource().getPlayerOrException();
-                            String name = StringArgumentType.getString(ctx, "name");
-                            String pr = StringArgumentType.getString(ctx, "priority").toUpperCase();
-                            ZoneSelectionManager.SearchPriority priority;
-                            try {
-                                priority = ZoneSelectionManager.SearchPriority.valueOf(pr);
-                            } catch (IllegalArgumentException e) {
-                                p.sendSystemMessage(net.minecraft.network.chat.Component.literal("invalid priority"));
-                                return 0;
-                            }
-                            ZoneSelectionManager.saveZone(name, priority, p.getUUID());
-                            p.sendSystemMessage(net.minecraft.network.chat.Component.literal("Zone saved."));
-                            return 1;
-                        })));
+                        .then(Commands.argument("priority", StringArgumentType.string())
+                                .executes(ctx -> {
+                                    ServerPlayer p = ctx.getSource().getPlayerOrException();
+                                    String name = StringArgumentType.getString(ctx, "name");
+                                    String pr = StringArgumentType.getString(ctx, "priority").toUpperCase();
+                                    ZoneSelectionManager.SearchPriority priority;
+                                    try {
+                                        priority = ZoneSelectionManager.SearchPriority.valueOf(pr);
+                                    } catch (IllegalArgumentException e) {
+                                        p.sendSystemMessage(net.minecraft.network.chat.Component.literal("invalid priority"));
+                                        return 0;
+                                    }
+                                    ZoneSelectionManager.saveZone(name, priority, p.getUUID());
+                                    p.sendSystemMessage(net.minecraft.network.chat.Component.literal("Zone saved (無綁定地圖)。"));
+                                    return 1;
+                                })
+                                .then(Commands.argument("mapId", StringArgumentType.word())
+                                        .executes(ctx -> {
+                                            ServerPlayer p = ctx.getSource().getPlayerOrException();
+                                            String name = StringArgumentType.getString(ctx, "name");
+                                            String pr = StringArgumentType.getString(ctx, "priority").toUpperCase();
+                                            String mapId = StringArgumentType.getString(ctx, "mapId");
+                                            ZoneSelectionManager.SearchPriority priority;
+                                            try {
+                                                priority = ZoneSelectionManager.SearchPriority.valueOf(pr);
+                                            } catch (IllegalArgumentException e) {
+                                                p.sendSystemMessage(net.minecraft.network.chat.Component.literal("invalid priority"));
+                                                return 0;
+                                            }
+                                            ZoneSelectionManager.saveZone(name, priority, p.getUUID(), mapId);
+                                            p.sendSystemMessage(net.minecraft.network.chat.Component.literal("Zone saved for map: " + mapId));
+                                            return 1;
+                                        }))));
 
         var generate = Commands.literal("generate").executes(ctx -> {
             ServerPlayer p = ctx.getSource().getPlayerOrException();

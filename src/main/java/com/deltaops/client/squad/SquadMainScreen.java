@@ -5,6 +5,8 @@
  */
 package com.deltaops.client.squad;
 
+import com.deltaops.lobby.HazardMapRegistry;
+import com.deltaops.lobby.MapDefinition;
 import com.deltaops.network.ModNetwork;
 import com.deltaops.network.squad.ClientboundSquadStatusPacket;
 import com.deltaops.network.squad.ServerboundSquadActionPacket;
@@ -24,6 +26,9 @@ public class SquadMainScreen extends Screen {
     private final List<String> memberNames = new ArrayList<>();
     private final List<Boolean> readyStates = new ArrayList<>();
     private String statusText = "等待小隊資料...";
+    private Button mapSelectButton;
+    private final List<MapDefinition> maps = new ArrayList<>(HazardMapRegistry.getAllMaps().values());
+    private int selectedMapIndex = -1; // -1 表示未選擇
 
     public SquadMainScreen() {
         super(Component.literal("小隊面板"));
@@ -46,6 +51,34 @@ public class SquadMainScreen extends Screen {
         addRenderableWidget(Button.builder(Component.literal("踢出玩家"), btn -> sendAction(ServerboundSquadActionPacket.Action.KICK, targetNameInput.getValue())).bounds(centerX - 105, top + 90, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("移交隊長"), btn -> sendAction(ServerboundSquadActionPacket.Action.TRANSFER, targetNameInput.getValue())).bounds(centerX + 5, top + 90, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("切換自動配對"), btn -> sendAction(ServerboundSquadActionPacket.Action.TOGGLE_AUTO_MATCH, null)).bounds(centerX + 110, top + 90, 100, 20).build());
+
+        // 地圖選擇按鈕
+        this.mapSelectButton = this.addRenderableWidget(Button.builder(
+                Component.literal(getMapButtonLabel()),
+                btn -> cycleMap()
+        ).bounds(centerX - 105, top + 118, 210, 20).build());
+
+        addRenderableWidget(Button.builder(Component.literal("配對大廳"), btn -> minecraft.setScreen(new com.deltaops.client.matchmaking.MatchmakingScreen())).bounds(centerX - 50, top + 145, 100, 20).build());
+        addRenderableWidget(Button.builder(Component.literal("🏪 商店"), btn -> com.deltaops.network.ModNetwork.CHANNEL.sendToServer(new com.deltaops.network.squad.ServerboundSquadActionPacket(com.deltaops.network.squad.ServerboundSquadActionPacket.Action.OPEN_SHOP, null))).bounds(centerX + 55, top + 145, 80, 20).build());
+    }
+
+    private String getMapButtonLabel() {
+        if (selectedMapIndex < 0 || selectedMapIndex >= maps.size()) {
+            return "§7請選擇地圖...";
+        }
+        MapDefinition md = maps.get(selectedMapIndex);
+        return "§6地圖: " + md.displayName() + " (" + md.minPlayers() + "-" + md.maxPlayers() + "人)";
+    }
+
+    private void cycleMap() {
+        selectedMapIndex = (selectedMapIndex + 1) % (maps.size() + 1) - 1; // -1 → 0 → 1 → 2 → 3 → -1
+        if (selectedMapIndex >= 0 && selectedMapIndex < maps.size()) {
+            String mapId = maps.get(selectedMapIndex).mapId();
+            sendAction(ServerboundSquadActionPacket.Action.SELECT_MAP, mapId);
+        }
+        if (mapSelectButton != null) {
+            mapSelectButton.setMessage(Component.literal(getMapButtonLabel()));
+        }
     }
 
     private void sendAction(ServerboundSquadActionPacket.Action action, String target) {
@@ -92,14 +125,21 @@ public class SquadMainScreen extends Screen {
         gui.drawString(font, Component.literal("小隊管理功能：建立、邀請、踢出、移交、切換準備、發車"), width / 2 - 180, height / 5 - 20, 0xFFFFFF);
         gui.drawString(font, Component.literal("輸入目標玩家名稱後，再執行邀請 / 踢出 / 移交。"), width / 2 - 180, height / 5 - 8, 0xAAAAAA);
         gui.drawString(font, Component.literal(this.statusText), width / 2 - 180, height / 5 + 140, 0xCCCCCC);
-        int listStartY = height / 5 + 160;
+
+        // 顯示已選擇的地圖
+        if (selectedMapIndex >= 0 && selectedMapIndex < maps.size()) {
+            MapDefinition md = maps.get(selectedMapIndex);
+            gui.drawString(font, Component.literal("§e已選: " + md.displayName() + " [" + md.minPlayers() + "-" + md.maxPlayers() + "人]"),
+                    width / 2 - 180, height / 5 + 175, 0xFFFFAA);
+        } else {
+            gui.drawString(font, Component.literal("§7尚未選擇地圖"), width / 2 - 180, height / 5 + 175, 0x888888);
+        }
+
+        int listStartY = height / 5 + 190;
         for (int i = 0; i < memberNames.size(); i++) {
             String name = memberNames.get(i);
             boolean ready = i < readyStates.size() && readyStates.get(i);
             String label = name + (ready ? " (已準備)" : " (未準備)");
-            if (leaderUuid != null && i < memberNames.size() && name != null && name.length() > 0 && memberNames.get(i).equals(name) && leaderUuid != null) {
-                // no player UUID mapping in client packet aside from position, so indicate leader by index if available
-            }
             gui.drawString(font, Component.literal(label), width / 2 - 180, listStartY + i * 12, ready ? 0x55FF55 : 0xFF5555);
         }
     }

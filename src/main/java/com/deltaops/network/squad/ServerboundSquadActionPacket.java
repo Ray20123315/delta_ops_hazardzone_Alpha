@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ServerboundSquadActionPacket {
-    public enum Action { CREATE, LEAVE, INVITE, KICK, TRANSFER, TOGGLE_AUTO_MATCH, TOGGLE_READY, LAUNCH }
+    public enum Action { CREATE, LEAVE, INVITE, KICK, TRANSFER, TOGGLE_AUTO_MATCH, TOGGLE_READY, LAUNCH, SELECT_MAP, OPEN_SHOP }
 
     public final Action action;
     public final String targetName; // optional for invite/kick/transfer
@@ -94,6 +94,24 @@ public class ServerboundSquadActionPacket {
                 }
                 case TOGGLE_READY -> com.deltaops.lobby.LobbySquadManager.toggleReady(sender);
                 case LAUNCH -> com.deltaops.lobby.LobbySquadManager.attemptLaunch(sender);
+                case SELECT_MAP -> {
+                    String mapId = pkt.targetName; // 服用 targetName 欄位存放地圖 ID
+                    if (mapId != null && !mapId.isBlank()) {
+                        com.deltaops.lobby.LobbySquadManager.setSquadMapId(sender, mapId);
+                    }
+                }
+                case OPEN_SHOP -> {
+                    net.minecraftforge.network.NetworkHooks.openScreen(sender, new net.minecraft.world.MenuProvider() {
+                        @Override
+                        public net.minecraft.network.chat.Component getDisplayName() {
+                            return net.minecraft.network.chat.Component.literal("商人");
+                        }
+                        @Override
+                        public net.minecraft.world.inventory.AbstractContainerMenu createMenu(int id, net.minecraft.world.entity.player.Inventory inventory, net.minecraft.world.entity.player.Player player1) {
+                            return new com.deltaops.shop.TraderMenu(id, inventory);
+                        }
+                    });
+                }
             }
         });
         ctx.setPacketHandled(true);

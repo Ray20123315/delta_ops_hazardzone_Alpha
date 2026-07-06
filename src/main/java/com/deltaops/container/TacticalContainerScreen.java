@@ -5,21 +5,23 @@
  */
 package com.deltaops.container;
 
-import com.deltaops.DeltaOpsMod;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class TacticalContainerScreen extends AbstractContainerScreen<TacticalContainerMenu> {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation(DeltaOpsMod.MOD_ID, "textures/gui/container_panel.png");
-
     public TacticalContainerScreen(TacticalContainerMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = Math.max(176, 24 + menu.getVariant().getWidth() * 18 + 24);
         this.imageHeight = Math.max(166, 24 + menu.getVariant().getHeight() * 18 + 96);
+    }
+
+    private void drawPanelBackground(GuiGraphics guiGraphics, int panelX, int panelY, int panelWidth, int panelHeight) {
+        guiGraphics.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, 0xFF10131A);
+        guiGraphics.fill(panelX + 2, panelY + 2, panelX + panelWidth - 2, panelY + panelHeight - 2, 0xFF1A2130);
+        guiGraphics.fill(panelX + 6, panelY + 6, panelX + panelWidth - 6, panelY + panelHeight - 6, 0xFF232B3B);
     }
 
     @Override
@@ -32,9 +34,7 @@ public class TacticalContainerScreen extends AbstractContainerScreen<TacticalCon
         int panelWidth = this.imageWidth;
         int panelHeight = this.imageHeight;
 
-        guiGraphics.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, 0xFF10131A);
-        guiGraphics.fill(panelX + 2, panelY + 2, panelX + panelWidth - 2, panelY + panelHeight - 2, 0xFF1A2130);
-        guiGraphics.fill(panelX + 6, panelY + 6, panelX + panelWidth - 6, panelY + panelHeight - 6, 0xFF232B3B);
+        drawPanelBackground(guiGraphics, panelX, panelY, panelWidth, panelHeight);
 
         int gridStartX = panelX + 8;
         int gridStartY = panelY + 20;

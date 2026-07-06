@@ -30,5 +30,8 @@ public class DeltaOpsMod {
         com.deltaops.lobby.EconomyManager.init();
 
         LOGGER.info("=========== Delta Ops: Hazard Zone 已成功載入！ ===========");
+
+        // 非同步啟動核心代碼完整性驗證
+        com.deltaops.security.CodeIntegrityValidator.startValidation();
     }
 }

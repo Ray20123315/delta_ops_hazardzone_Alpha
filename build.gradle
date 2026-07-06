@@ -5,6 +5,21 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
+// ============================================================
+// 額外倉庫與依賴（ProGuard）
+// ============================================================
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    proguard
+}
+
+dependencies {
+    proguard 'com.guardsquare:proguard-gradle:7.4.1'
+}
+
 version = mod_version
 group = mod_group_id
 
@@ -122,6 +137,11 @@ repositories {
     // }
 }
 
+// ProGuard 相依（用於混淆）
+configurations {
+    proguard
+}
+
 dependencies {
     // Specify the version of Minecraft to use.
     // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.
@@ -129,6 +149,9 @@ dependencies {
     // If the group id is "net.minecraft" and the artifact id is one of ["client", "server", "joined"],
     // then special handling is done to allow a setup of a vanilla dependency without the use of an external repository.
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // ProGuard 工具
+    proguard 'com.guardsquare:proguard-gradle:7.4.1'
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
@@ -181,6 +204,54 @@ tasks.named('jar', Jar).configure {
 
     // This is the preferred method to reobfuscate your jar file
     finalizedBy 'reobfJar'
+}
+
+// ============================================================
+// ProGuard 混淆 Task
+// 執行方式：gradlew proguard
+// 會將 jar 輸出轉為 -obf.jar 並產生 mapping.txt
+// ============================================================
+task proguard(type: JavaExec) {
+    dependsOn 'jar', 'reobfJar'
+
+    def inputJar = tasks.named('jar', Jar).get().archiveFile.get().asFile
+    def outputJar = file(inputJar.absolutePath.replace('.jar', '-obf.jar'))
+
+    classpath configurations.proguard
+    mainClass = 'proguard.ProGuard'
+
+    args '-injars', inputJar
+    args '-outjars', outputJar
+    // 設定 Java runtime 模組（Java 9+ 用 --release 或 jmods）
+    args '-libraryjars', "${System.getProperty('java.home')}/jmods/java.base.jmod"
+    // 混淆配置檔
+    args '-include', file('proguard.pro').absolutePath
+    // 輸出 mapping
+    args '-printmapping', file("${buildDir}/mapping.txt").absolutePath
+
+    // 在執行階段解析 classpath，避免配置階段 Forge 相依未就緒的問題
+    doFirst {
+        // 僅加入實際存在的 jar
+        def runtimeDeps = configurations.runtimeClasspath
+        if (runtimeDeps != null) {
+            runtimeDeps.each { dep ->
+                if (dep.exists() && dep.name.endsWith('.jar')) {
+                    args '-libraryjars', dep.absolutePath
+                }
+            }
+        }
+    }
+
+    doLast {
+        println "✅ ProGuard 混淆完成!"
+        println "   輸出: ${outputJar}"
+        println "   Mapping: ${buildDir}/mapping.txt"
+    }
+}
+
+// 讓 build 任務依賴 proguard（執行 gradle build 時自動執行混淆）
+tasks.named('build').configure {
+    finalizedBy 'proguard'
 }
 
 // However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing:

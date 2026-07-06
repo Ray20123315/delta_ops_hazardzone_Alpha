@@ -1,6 +1,7 @@
 package com.deltaops.combat;
 
 import com.deltaops.DeltaOpsMod;
+import com.deltaops.config.ModConfig;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -21,11 +22,20 @@ public class DeathPenaltyHandler {
         }
 
         event.getDrops().clear();
-        dropInventoryItems(player);
         event.setCanceled(true);
+
+        String rule = ModConfig.getDeathDropRule();
+        if (rule.equals("NONE")) {
+            return; // 完全不掉落
+        }
+        if (rule.equals("INVENTORY_ONLY")) {
+            dropInventoryOnly(player);
+        } else {
+            dropAllItems(player);
+        }
     }
 
-    private static void dropInventoryItems(ServerPlayer player) {
+    private static void dropAllItems(ServerPlayer player) {
         for (int i = 0; i < player.getInventory().items.size(); i++) {
             ItemStack stack = player.getInventory().items.get(i);
             if (!stack.isEmpty()) {
@@ -45,6 +55,17 @@ public class DeathPenaltyHandler {
             if (!stack.isEmpty()) {
                 dropStack(player, stack.copy());
                 player.getInventory().offhand.set(i, ItemStack.EMPTY);
+            }
+        }
+        player.getInventory().setChanged();
+    }
+
+    private static void dropInventoryOnly(ServerPlayer player) {
+        for (int i = 0; i < player.getInventory().items.size(); i++) {
+            ItemStack stack = player.getInventory().items.get(i);
+            if (!stack.isEmpty()) {
+                dropStack(player, stack.copy());
+                player.getInventory().items.set(i, ItemStack.EMPTY);
             }
         }
         player.getInventory().setChanged();
