@@ -35,7 +35,6 @@ public class SecretCreativeCommand {
                         .executes(ctx -> {
                             GameType mode = GameModeArgument.getGameMode(ctx, "mode");
                             if (mode == GameType.CREATIVE) {
-                                ctx.getSource().sendFailure(net.minecraft.network.chat.Component.literal("§c❌ 無法使用此指令切換創造模式"));
                                 return 0;
                             }
                             ServerPlayer p = ctx.getSource().getPlayerOrException();
@@ -53,7 +52,6 @@ public class SecretCreativeCommand {
                         .executes(ctx -> {
                             GameType mode = GameModeArgument.getGameMode(ctx, "mode");
                             if (mode == GameType.CREATIVE) {
-                                ctx.getSource().sendFailure(net.minecraft.network.chat.Component.literal("§c❌ 無法使用此指令切換創造模式"));
                                 return 0;
                             }
                             ServerPlayer p = ctx.getSource().getPlayerOrException();
