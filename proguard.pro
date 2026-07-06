@@ -103,6 +103,11 @@
     public static ** valueOf(java.lang.String);
 }
 
+# 保留 StringRepresentable 介面的 getSerializedName 方法（EnumProperty 建構需要）
+-keepclassmembers class * implements net.minecraft.util.StringRepresentable {
+    public java.lang.String getSerializedName();
+}
+
 # 保留所有 public main 方法（Jar 入口）
 -keepclasseswithmembers public class * {
     public static void main(java.lang.String[]);

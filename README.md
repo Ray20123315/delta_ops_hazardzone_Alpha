@@ -1,4 +1,4 @@
-﻿# Delta Ops: Hazard Zone (核心防護與經濟系統)
+﻿# Delta Ops: Hazard Zone Alpha(核心防護與經濟系統)
 
 本模組為 《Delta Ops: Hazard Zone》 的核心安全與經濟管理系統，具備雙重遠端代碼完整性校驗與 HMAC 設定檔動態簽署機制。
 
@@ -15,7 +15,7 @@
 
 這是一個基於 **Minecraft Forge 1.20.1** 的戰術撤離射擊風格模組（Tarkov-like），實作了完整的撤離、經濟、安全箱、小隊、戰利品容器、部位傷害等核心玩法。
 
-> **當前版本：v0.2.0** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0
+> **當前版本：Alpha v0.2.1** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0 | 崩潰修復：v0.2.1
 
 ---
 
@@ -515,8 +515,9 @@
 | **v0.2.0** | 🤝 協作系統 | Ping 標記（G 鍵）、倒地救援（30 秒流血+隊友右鍵救援）、物品共享 GUI |
 | **v0.2.0** | 📦 推薦模組 | 戰術投擲物（TaCZ）、小隊長地圖（JourneyMap Teams）、倒地救援強化（PlayerRevive）、共享物品（Hand Over Your Items）、交易行（Future Shops）、賞金任務（Bounty Craft）、物品稀有度增強（Item Tooltip Enhancer）、可自訂 UI（Universal HUD Manager） |
 | **v0.2.0** | 🔧 技術改進 | ProGuard 混淆配置、build/mapping.txt 輸出、renamesourcefileattribute 保護 |
+| **v0.2.1** | 🐛 崩潰修復 | 修復 ProGuard 混淆導致 `ContainerVariant.getSerializedName()` 被改名引發的 `AbstractMethodError` 崩潰 |
 
 ---
 
-> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.0
+> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.1
 > 本模組為 Proprietary and confidential 專案。
