@@ -372,4 +372,33 @@ public class LobbySquadManager {
     public static PendingRequest consumePending(UUID recipient) {
         return PENDING.remove(recipient);
     }
+
+    /**
+     * 檢查兩名玩家是否在同一小隊。
+     */
+    public static boolean areInSameSquad(ServerPlayer p1, ServerPlayer p2) {
+        if (p1 == null || p2 == null) return false;
+        UUID squadId1 = PLAYER_TO_SQUAD.get(p1.getUUID());
+        UUID squadId2 = PLAYER_TO_SQUAD.get(p2.getUUID());
+        return squadId1 != null && squadId1.equals(squadId2);
+    }
+
+    /**
+     * 取得小隊所有成員（ServerPlayer 列表）。
+     */
+    public static List<ServerPlayer> getSquadMembers(ServerPlayer player) {
+        List<ServerPlayer> result = new ArrayList<>();
+        if (player == null) return result;
+        UUID squadId = PLAYER_TO_SQUAD.get(player.getUUID());
+        if (squadId == null) return result;
+        Squad squad = SQUADS.get(squadId);
+        if (squad == null) return result;
+        var server = net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+        if (server == null) return result;
+        for (UUID member : squad.members) {
+            ServerPlayer sp = server.getPlayerList().getPlayer(member);
+            if (sp != null) result.add(sp);
+        }
+        return result;
+    }
 }

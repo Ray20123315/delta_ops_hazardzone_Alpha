@@ -13,7 +13,6 @@
 - **HUD 血量覆層** — HealthOverlayHandler
 
 ### 修正
-- 阻擋原版 `/gamemode` / `/gm` 切換至創造模式
 - 修復多項編譯錯誤（ModCreativeTab、LootCrateBlockEntity 等）
 
 ### 技術

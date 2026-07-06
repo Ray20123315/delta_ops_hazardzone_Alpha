@@ -44,6 +44,10 @@ public class SpectatorHandler {
         }
     }
 
+    public static boolean isInBattle(net.minecraft.server.level.ServerPlayer player) {
+        return player != null && ACTIVE_BATTLE_PLAYERS.contains(player.getUUID());
+    }
+
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity().level().isClientSide) {

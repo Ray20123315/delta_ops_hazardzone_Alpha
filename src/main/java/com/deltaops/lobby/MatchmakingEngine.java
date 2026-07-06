@@ -241,4 +241,12 @@ public class MatchmakingEngine {
     public static boolean isAnyQueued() {
         return !soloPool.isEmpty() || !squadPool.isEmpty();
     }
+
+    /**
+     * 檢查玩家是否正在對戰中。
+     */
+    public static boolean isPlayerInBattle(net.minecraft.server.level.ServerPlayer player) {
+        if (player == null) return false;
+        return com.deltaops.team.SpectatorHandler.isInBattle(player);
+    }
 }
