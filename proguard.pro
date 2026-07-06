@@ -103,10 +103,9 @@
     public static ** valueOf(java.lang.String);
 }
 
-# 保留 StringRepresentable 介面的 getSerializedName 方法（EnumProperty 建構需要）
--keepclassmembers class * implements net.minecraft.util.StringRepresentable {
-    public java.lang.String getSerializedName();
-}
+# 保留 ContainerVariant（實作 StringRepresentable）
+# 輸入 jar 已為 SRG 名稱，保留原始方法名稱以維持介面一致性
+-keep class com.deltaops.container.ContainerVariant { *; }
 
 # 保留所有 public main 方法（Jar 入口）
 -keepclasseswithmembers public class * {

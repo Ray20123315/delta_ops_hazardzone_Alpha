@@ -515,7 +515,9 @@
 | **v0.2.0** | 🤝 協作系統 | Ping 標記（G 鍵）、倒地救援（30 秒流血+隊友右鍵救援）、物品共享 GUI |
 | **v0.2.0** | 📦 推薦模組 | 戰術投擲物（TaCZ）、小隊長地圖（JourneyMap Teams）、倒地救援強化（PlayerRevive）、共享物品（Hand Over Your Items）、交易行（Future Shops）、賞金任務（Bounty Craft）、物品稀有度增強（Item Tooltip Enhancer）、可自訂 UI（Universal HUD Manager） |
 | **v0.2.0** | 🔧 技術改進 | ProGuard 混淆配置、build/mapping.txt 輸出、renamesourcefileattribute 保護 |
-| **v0.2.1** | 🐛 崩潰修復 | 修復 ProGuard 混淆導致 `ContainerVariant.getSerializedName()` 被改名引發的 `AbstractMethodError` 崩潰 |
+| **v0.2.1** | 🐛 崩潰修復 | 修復 ProGuard 混淆導致 `ContainerVariant` 實作 `StringRepresentable` 介面的 `getSerializedName()` 方法（SRG: `m_7912_()`）被 ProGuard 改名，Forge 運行時因找不到對應的介面方法而拋出 `AbstractMethodError`。 |
+| **v0.2.1** | 🔧 解決方案 | 在 `proguard.pro` 中加入 `-keep class com.deltaops.container.ContainerVariant { *; }`，保留完整類別及其所有方法名稱（包含 SRG 名稱），確保與 Forge 運行時的方法映射一致。 |
+| **v0.2.1** | ✅ 驗證方式 | 透過 `mapping.txt` 確認 `m_7912_() -> m_7912_` 被正確保留，無名稱變更。 |
 
 ---
 

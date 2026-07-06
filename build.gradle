@@ -208,11 +208,13 @@ tasks.named('jar', Jar).configure {
 
 // ============================================================
 // ProGuard 混淆 Task
-// 執行方式：gradlew proguard
-// 會將 jar 輸出轉為 -obf.jar 並產生 mapping.txt
+// 在 reobfJar 之前執行，混淆原始類別名稱，再由 ForgeGradle 轉為 SRG
 // ============================================================
 task proguard(type: JavaExec) {
     dependsOn 'jar', 'reobfJar'
+    // 注意：輸入 jar 已經是 reobf 後的 SRG 名稱。
+    // ProGuard 不能混淆實作 Minecraft/Forge 介面的類別，
+    // 否則介面方法名稱（SRG）會與實作類別的方法名稱不一致。
 
     def inputJar = tasks.named('jar', Jar).get().archiveFile.get().asFile
     def outputJar = file(inputJar.absolutePath.replace('.jar', '-obf.jar'))
