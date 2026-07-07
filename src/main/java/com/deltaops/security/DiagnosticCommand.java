@@ -47,17 +47,14 @@ public class DiagnosticCommand {
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> d = event.getDispatcher();
 
-        // ===== /dt config sign (別名) =====
+        // ===== /dt config sign (別名) + /dt diag 主指令 =====
         d.register(Commands.literal("dt")
                 .then(Commands.literal("config")
                         .requires(DiagnosticCommand::hasPermissionOrDeveloper)
                         .then(Commands.literal("sign")
                                 .then(Commands.argument("filename", StringArgumentType.string())
                                         .executes(ctx -> executeSign(ctx.getSource(),
-                                                StringArgumentType.getString(ctx, "filename")))))));
-
-        // ===== /dt diag 主指令 =====
-        d.register(Commands.literal("dt")
+                                                StringArgumentType.getString(ctx, "filename"))))))
                 .then(Commands.literal("diag")
                         .requires(DiagnosticCommand::hasPermissionOrDeveloper)
                         // --- /dt diag (唯讀診斷報告) ---
