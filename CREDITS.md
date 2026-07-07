@@ -1,6 +1,6 @@
 # 貢獻者名單 (CREDITS)
 
-感謝所有支持 Delta Ops: Hazard Zone 的成員，沒有你們，這個專案無法走到現在。
+感謝所有支持 Delta Ops: Hazard Zone 的成員。
 
 ## 🌟 贊助夥伴 (Sponsors)
 特別感謝以下夥伴為本專案提供的資金贊助，這些資源皆已全數投入至 DeepSeek API 與雲端服務維護中：
