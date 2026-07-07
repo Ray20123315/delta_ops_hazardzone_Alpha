@@ -44,3 +44,6 @@ Thumbs.db
 
 # Local release notes (already in docs/ or separate)
 release-notes.md
+
+# Cloudflare Worker validator (not part of source)
+delta-ops-validator*
