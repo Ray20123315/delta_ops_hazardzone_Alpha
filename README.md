@@ -1,3 +1,12 @@
+# Delta Ops: Hazard Zone (Alpha)
+
+<!-- 快速導覽區 -->
+| [📖 README](README.md) | [🤝 Contributing](CONTRIBUTING.md) | [⚖️ License](LICENSE) | [🛠️ Support](SUPPORT.md) |
+| :--- | :--- | :--- | :--- |
+| **[📜 Code of Conduct](CODE_OF_CONDUCT.md)** | **[✨ Credits](CREDITS.md)** | **[📄 PDF License](Delta_Ops_Hazard_Zone_License.pdf)** | |
+
+---
+
 # Delta Ops: Hazard Zone Alpha(核心防護與經濟系統)
 
 本模組為 《Delta Ops: Hazard Zone》 的核心安全與經濟管理系統，具備雙重遠端代碼完整性校驗與 HMAC 設定檔動態簽署機制。
