@@ -20,7 +20,7 @@ import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 管理員解鎖指令 /logintoken <密碼>。
+ * 管理員解鎖指令 /dt login <密碼>。
  *
  * 流程：
  * 1. 接收玩家輸入的密碼
@@ -42,45 +42,46 @@ public class LoginCommand {
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         CommandDispatcher<CommandSourceStack> d = event.getDispatcher();
 
-        d.register(Commands.literal("logintoken")
-                .then(Commands.argument("password", StringArgumentType.greedyString())
+        d.register(Commands.literal("dt")
+                .then(Commands.literal("login")
+                        .then(Commands.argument("password", StringArgumentType.greedyString())
+                                .executes(ctx -> {
+                                    ServerPlayer player = ctx.getSource().getPlayerOrException();
+                                    String password = StringArgumentType.getString(ctx, "password");
+
+                                    // 1. 將密碼與 SALT 拼接
+                                    String salted = password + SALT;
+
+                                    // 2. SHA-256 加密 → Hex 字串
+                                    String clientToken = sha256Hex(salted);
+
+                                    // 3. 取得當前模組 Hash
+                                    String hash = VerificationManager.getModuleHash();
+
+                                    // 4. 發送 register 請求至 Worker（Java 端不判斷密碼對錯）
+                                    DeltaOpsMod.LOGGER.info("🔐 [LoginCommand] 玩家 {} 嘗試解鎖...", player.getName().getString());
+                                    boolean success = NetworkClient.sendRegister(clientToken, hash);
+
+                                    // 5. 根據 Worker 回傳結果處理
+                                    if (success) {
+                                        VerificationManager.isVerified = true;
+                                        player.sendSystemMessage(Component.literal(""));
+                                        player.sendSystemMessage(Component.literal("§a§m-----------------------------------------------------"));
+                                        player.sendSystemMessage(Component.literal("§a✅ 解鎖成功！模組功能已完全開放。"));
+                                        player.sendSystemMessage(Component.literal("§a§m-----------------------------------------------------"));
+                                        player.sendSystemMessage(Component.literal(""));
+                                        DeltaOpsMod.LOGGER.info("✅ [LoginCommand] 玩家 {} 解鎖成功", player.getName().getString());
+                                    } else {
+                                        player.sendSystemMessage(Component.literal("§c❌ 解鎖失敗，請確認密碼是否正確，或聯絡開發者。"));
+                                        DeltaOpsMod.LOGGER.warn("⚠️ [LoginCommand] 玩家 {} 解鎖失敗（密碼錯誤或 Worker 拒絕）", player.getName().getString());
+                                    }
+
+                                    return 1;
+                                }))
                         .executes(ctx -> {
-                            ServerPlayer player = ctx.getSource().getPlayerOrException();
-                            String password = StringArgumentType.getString(ctx, "password");
-
-                            // 1. 將密碼與 SALT 拼接
-                            String salted = password + SALT;
-
-                            // 2. SHA-256 加密 → Hex 字串
-                            String clientToken = sha256Hex(salted);
-
-                            // 3. 取得當前模組 Hash
-                            String hash = VerificationManager.getModuleHash();
-
-                            // 4. 發送 register 請求至 Worker（Java 端不判斷密碼對錯）
-                            DeltaOpsMod.LOGGER.info("🔐 [LoginCommand] 玩家 {} 嘗試解鎖...", player.getName().getString());
-                            boolean success = NetworkClient.sendRegister(clientToken, hash);
-
-                            // 5. 根據 Worker 回傳結果處理
-                            if (success) {
-                                VerificationManager.isVerified = true;
-                                player.sendSystemMessage(Component.literal(""));
-                                player.sendSystemMessage(Component.literal("§a§m-----------------------------------------------------"));
-                                player.sendSystemMessage(Component.literal("§a✅ 解鎖成功！模組功能已完全開放。"));
-                                player.sendSystemMessage(Component.literal("§a§m-----------------------------------------------------"));
-                                player.sendSystemMessage(Component.literal(""));
-                                DeltaOpsMod.LOGGER.info("✅ [LoginCommand] 玩家 {} 解鎖成功", player.getName().getString());
-                            } else {
-                                player.sendSystemMessage(Component.literal("§c❌ 解鎖失敗，請確認密碼是否正確，或聯絡開發者。"));
-                                DeltaOpsMod.LOGGER.warn("⚠️ [LoginCommand] 玩家 {} 解鎖失敗（密碼錯誤或 Worker 拒絕）", player.getName().getString());
-                            }
-
-                            return 1;
-                        }))
-                .executes(ctx -> {
-                    ctx.getSource().sendFailure(Component.literal("§c用法: /logintoken <密碼>"));
-                    return 0;
-                }));
+                            ctx.getSource().sendFailure(Component.literal("§c用法: /dt login <密碼>"));
+                            return 0;
+                        })));
     }
 
     /**
