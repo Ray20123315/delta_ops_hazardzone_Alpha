@@ -15,7 +15,7 @@
 
 這是一個基於 **Minecraft Forge 1.20.1** 的戰術撤離射擊風格模組（Tarkov-like），實作了完整的撤離、經濟、安全箱、小隊、戰利品容器、部位傷害等核心玩法。
 
-> **當前版本：Alpha v0.2.2** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0 | 崩潰修復：v0.2.1 | HUD 重構：v0.2.2
+> **當前版本：Alpha v0.2.3** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0 | 崩潰修復：v0.2.1 | HUD 重構：v0.2.2 | Bug 修復：v0.2.3
 
 ---
 
@@ -510,8 +510,10 @@
 | **v0.2.1** | ✅ 驗證方式 | 透過 `mapping.txt` 確認 `m_7912_() -> m_7912_` 被正確保留，無名稱變更。 |
 | **v0.2.2** | 🖥️ HUD 重構 | 愛心渲染改為 `RenderSystem.setShaderColor` 著色，保留原版愛心形狀（不再顯示方塊），始終一排 10 顆心，不同血量層級用顏色區分，不換排不擋畫面。 |
 | **v0.2.2** | 🍖 移除飢餓值 | 新增 `GlobalHungerFiller` 伺服端每 tick 補滿飢餓值，新增 `VanillaHudHider` 客戶端隱藏原版食物條與愛心條（由自訂渲染取代）。 |
+| **v0.2.3** | 🐛 `/kill` 無效修復 | 大廳保護 `LobbyProtectionManager` 取消所有傷害事件包含 `/kill`（`outOfWorld`），導致管理員在大廳無法使用 `/kill`。新增例外判斷，允許 `outOfWorld` 傷害來源通過。 |
+| **v0.2.3** | 🖥️ 血量數字化 | 取消原版愛心條渲染，改為 `RenderGuiOverlayEvent.Pre` 攔截 `PLAYER_HEALTH` 直接顯示「❤ 目前HP/最大HP」，根據血量百分比變換愛心顏色，不受 maxHealth 同步延遲影響。 |
 
 ---
 
-> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.2
+> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.3
 > 本模組為 Proprietary and confidential 專案。

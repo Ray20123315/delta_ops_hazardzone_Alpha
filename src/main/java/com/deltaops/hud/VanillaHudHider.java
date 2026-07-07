@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.Mod;
 /**
  * 隱藏原版 HUD 元素（由自訂渲染取代）：
  * - 飢餓值（食物條）：由 GlobalHungerFiller 持續補滿，完全移除飢餓機制
- * - 血量（愛心條）：由 HealthOverlayHandler 自訂渲染（100 HP / 50 顆心系統）
  */
 @Mod.EventBusSubscriber(modid = DeltaOpsMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class VanillaHudHider {
@@ -23,8 +22,6 @@ public class VanillaHudHider {
     @SubscribeEvent
     public static void onRenderGuiOverlay(RenderGuiOverlayEvent.Pre event) {
         if (event.getOverlay() == VanillaGuiOverlay.FOOD_LEVEL.type()) {
-            event.setCanceled(true);
-        } else if (event.getOverlay() == VanillaGuiOverlay.PLAYER_HEALTH.type()) {
             event.setCanceled(true);
         }
     }

@@ -37,6 +37,10 @@ public class LobbyProtectionManager {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
+        // 允許 /kill 指令（OUT_OF_WORLD 傷害來源），方便管理員除錯
+        if (event.getSource().getMsgId().equals("outOfWorld")) {
+            return;
+        }
         if (LobbyArea.isInLobby(player)) {
             event.setCanceled(true);
         }
