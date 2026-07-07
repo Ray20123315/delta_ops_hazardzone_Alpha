@@ -1,4 +1,4 @@
-﻿# Delta Ops: Hazard Zone Alpha(核心防護與經濟系統)
+# Delta Ops: Hazard Zone Alpha(核心防護與經濟系統)
 
 本模組為 《Delta Ops: Hazard Zone》 的核心安全與經濟管理系統，具備雙重遠端代碼完整性校驗與 HMAC 設定檔動態簽署機制。
 
@@ -543,9 +543,13 @@
 這個專案目前處於 Alpha 階段，非常歡迎任何形式的參與，幫助《Delta Ops: Hazard Zone》變得更好。
 
 ### 🤝 如何貢獻
-目前的貢獻方式有兩種，依據你的專長選擇即可：
-1. **提交問題 (Issues)**：若你在測試中發現任何 Bug 或崩潰，請直接在 [GitHub Issues](https://github.com/Ray20123315/delta_ops_hazardzone_Alpha/issues) 提交詳細報告。
-2. **加入討論 (社群)**：歡迎加入我們的 Q 群 (號碼: **714446429**) 進行交流與測試反饋。
+目前的貢獻方式依據你的需求選擇即可：
+
+1. **GitHub Issues (首選)**：若你在測試中發現任何 Bug 或崩潰，請直接在 [GitHub Issues](https://github.com/Ray20123315/delta_ops_hazardzone_Alpha/issues) 提交詳細報告。這是最有效率的回報方式。
+2. **GitHub Discussions**：對於遊戲機制設計、建議、或是技術交流，歡迎前往 [Discussions](https://github.com/Ray20123315/delta_ops_hazardzone_Alpha/discussions) 參與討論。此平台不受地區網路限制。
+3. **社群討論 (Q群)**：歡迎加入我們的 Q 群 (號碼: **714446429**) 進行即時交流與測試反饋。
+
+*註：若您因網路因素無法加入社群，請優先使用 GitHub 進行回報，我會確保每一則來自 GitHub 的反饋都能被看見與處理。*
 
 ### 💡 關於贊助
 目前本專案 **不接受任何形式的實體貨幣捐款**。若您有心想支持本專案，所有的贊助資源將會直接投入至 DeepSeek 等 AI API 的營運成本中，以維持自動化性能診斷服務的穩定。若有意支持，歡迎直接與我聯繫，感謝您的認同。
