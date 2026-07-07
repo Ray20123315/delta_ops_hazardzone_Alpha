@@ -24,6 +24,7 @@ public class DeltaOpsMod {
         ModBlocks.BLOCKS.register(modEventBus);
         ModBlocks.BLOCK_ENTITY_TYPES.register(modEventBus);
         ModMenuTypes.MENU_TYPES.register(modEventBus);
+        com.deltaops.inventory.ModInventoryMenus.register(modEventBus);
         com.deltaops.item.ModItems.ITEMS.register(modEventBus);
         ModNetwork.register();
         com.deltaops.loot.GlobalLootDatabase.getInstance().load();

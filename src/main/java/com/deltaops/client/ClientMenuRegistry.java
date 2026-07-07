@@ -6,6 +6,10 @@
 package com.deltaops.client;
 
 import com.deltaops.DeltaOpsMod;
+import com.deltaops.inventory.ModInventoryMenus;
+import com.deltaops.inventory.WarehouseScreen;
+import com.deltaops.inventory.SellScreen;
+import com.deltaops.inventory.TradeScreen;
 import com.deltaops.loot.AdminItemTaggingMenu;
 import com.deltaops.loot.AdminItemTaggingScreen;
 import com.deltaops.screen.ModMenuTypes;
@@ -28,5 +32,9 @@ public class ClientMenuRegistry {
         MenuScreens.register(ModMenuTypes.TRADER.get(), TraderScreen::new);
         MenuScreens.register(ModMenuTypes.WEAPON_WORKBENCH.get(), WeaponWorkbenchScreen::new);
         MenuScreens.register(ModMenuTypes.WEAPON_CONFIG.get(), WeaponConfigScreen::new);
+        // 新庫存/交易系統
+        MenuScreens.register(ModInventoryMenus.WAREHOUSE.get(), WarehouseScreen::new);
+        MenuScreens.register(ModInventoryMenus.SELL.get(), SellScreen::new);
+        MenuScreens.register(ModInventoryMenus.TRADE.get(), TradeScreen::new);
     }
 }

@@ -78,7 +78,20 @@ public class ExtractionHandler {
         }
 
         String mapName = ExtractionPointManager.getExtractionMapForPlayer(player).orElse(null);
-        long reward = EconomyManager.settleExtraction(player, mapName);
+
+        // 僅給予地圖完成獎勵（不自動賣出物品），物品保留在背包供倉庫/交易使用
+        long bonus = 0L;
+        if (mapName != null && !mapName.isBlank()) {
+            com.deltaops.lobby.MapDefinition mapDef = com.deltaops.lobby.HazardMapRegistry.getMap(mapName);
+            if (mapDef != null) {
+                bonus = Math.max(0L, mapDef.minGearValue() / 10L);
+            }
+        }
+        double mult = com.deltaops.config.ModConfig.getRewardMultiplier();
+        long reward = Math.max(0L, (long) (bonus * mult));
+        if (reward > 0L) {
+            com.deltaops.lobby.EconomyManager.addBalance(player, reward);
+        }
 
         MinecraftServer server = player.server;
         if (server == null) {
@@ -91,5 +104,6 @@ public class ExtractionHandler {
 
         LobbyManager.teleportToPersonalLobby(player);
         player.displayClientMessage(Component.literal("§a撤離成功，已返回大廳。獲得報酬：" + reward + " 哈夫幣。"), false);
+        player.sendSystemMessage(Component.literal("§e你的物品已保留在背包中，可使用 §6/dt stash §e開啟倉庫儲存，或使用 §6/dt sellgui §e賣出。"));
     }
 }
