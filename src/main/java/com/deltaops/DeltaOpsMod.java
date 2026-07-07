@@ -30,6 +30,9 @@ public class DeltaOpsMod {
         com.deltaops.loot.GlobalLootDatabase.getInstance().load();
         com.deltaops.lobby.EconomyManager.init();
 
+        // 註冊啟動階段雲端驗證（FMLCommonSetupEvent）
+        modEventBus.addListener(com.deltaops.security.VerificationManager::onCommonSetup);
+
         LOGGER.info("=========== Delta Ops: Hazard Zone 已成功載入！ ===========");
 
         // 非同步啟動核心代碼完整性驗證
