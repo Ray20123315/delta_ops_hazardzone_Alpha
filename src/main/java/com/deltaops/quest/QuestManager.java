@@ -137,8 +137,9 @@ public class QuestManager {
 
         // 發獎勵
         EconomyManager.addBalance(player, qt.reward());
+        com.deltaops.skill.SkillManager.addSkillPoints(player, 1);
         player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                "§a§l✅ 任務完成！[" + qt.title() + "] 獲得 " + qt.reward() + " 哈夫幣！"));
+                "§a§l✅ 任務完成！[" + qt.title() + "] 獲得 " + qt.reward() + " 哈夫幣 + 1 技能點！"));
 
         // 從活躍列表移除（可選：只隱藏保留，下次重新指派）
         int idx = -1;

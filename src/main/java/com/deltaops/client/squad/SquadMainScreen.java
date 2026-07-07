@@ -46,7 +46,7 @@ public class SquadMainScreen extends Screen {
         addRenderableWidget(Button.builder(Component.literal("建立小隊"), btn -> sendAction(ServerboundSquadActionPacket.Action.CREATE, null)).bounds(centerX - 210, top + 60, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("離開小隊"), btn -> sendAction(ServerboundSquadActionPacket.Action.LEAVE, null)).bounds(centerX - 105, top + 60, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("切換準備"), btn -> sendAction(ServerboundSquadActionPacket.Action.TOGGLE_READY, null)).bounds(centerX + 5, top + 60, 100, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("發車"), btn -> sendAction(ServerboundSquadActionPacket.Action.LAUNCH, null)).bounds(centerX + 110, top + 60, 100, 20).build());
+        addRenderableWidget(Button.builder(Component.literal("開始遊戲"), btn -> sendAction(ServerboundSquadActionPacket.Action.LAUNCH, null)).bounds(centerX + 110, top + 60, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("邀請玩家"), btn -> sendAction(ServerboundSquadActionPacket.Action.INVITE, targetNameInput.getValue())).bounds(centerX - 210, top + 90, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("踢出玩家"), btn -> sendAction(ServerboundSquadActionPacket.Action.KICK, targetNameInput.getValue())).bounds(centerX - 105, top + 90, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("移交隊長"), btn -> sendAction(ServerboundSquadActionPacket.Action.TRANSFER, targetNameInput.getValue())).bounds(centerX + 5, top + 90, 100, 20).build());
@@ -122,7 +122,7 @@ public class SquadMainScreen extends Screen {
     public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         renderBackground(gui);
         super.render(gui, mouseX, mouseY, delta);
-        gui.drawString(font, Component.literal("小隊管理功能：建立、邀請、踢出、移交、切換準備、發車"), width / 2 - 180, height / 5 - 20, 0xFFFFFF);
+        gui.drawString(font, Component.literal("小隊管理功能：建立、邀請、踢出、移交、切換準備、開始遊戲"), width / 2 - 180, height / 5 - 20, 0xFFFFFF);
         gui.drawString(font, Component.literal("輸入目標玩家名稱後，再執行邀請 / 踢出 / 移交。"), width / 2 - 180, height / 5 - 8, 0xAAAAAA);
         gui.drawString(font, Component.literal(this.statusText), width / 2 - 180, height / 5 + 140, 0xCCCCCC);
 

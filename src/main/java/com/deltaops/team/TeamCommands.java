@@ -68,7 +68,7 @@ public class TeamCommands {
                                     String mapName = StringArgumentType.getString(context, "mapName");
                                     boolean success = LobbySquadManager.attemptLaunch(leader, mapName);
                                     if (!success) {
-                                        leader.sendSystemMessage(Component.literal("§c[Delta Ops] 發車失敗，請確認隊伍準備狀態與地圖名稱。"));
+                                        leader.sendSystemMessage(Component.literal("§c[Delta Ops] 開始遊戲失敗，請確認隊伍準備狀態與地圖名稱。"));
                                         return 0;
                                     }
                                     return 1;

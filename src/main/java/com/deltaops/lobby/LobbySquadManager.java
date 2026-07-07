@@ -171,18 +171,18 @@ public class LobbySquadManager {
                 if (!isReady(member)) {
                     ServerPlayer p = getServerPlayerByUuid(member);
                     if (p != null) {
-                        p.sendSystemMessage(net.minecraft.network.chat.Component.literal("你尚未準備，無法發車。"));
+                        p.sendSystemMessage(net.minecraft.network.chat.Component.literal("你尚未準備，無法開始遊戲。"));
                     }
                 }
             }
-            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal("發車失敗：並非所有隊員皆已準備。"));
+            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal("開始遊戲失敗：並非所有隊員皆已準備。"));
             return false;
         }
 
         // 檢查地圖與人數限制
         String mapId = squad.mapId;
         if (mapId == null || mapId.isBlank()) {
-            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c請先選擇地圖再發車！"));
+            leader.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c請先選擇地圖再開始遊戲！"));
             return false;
         }
         MapDefinition mapDef = HazardMapRegistry.getMap(mapId);
