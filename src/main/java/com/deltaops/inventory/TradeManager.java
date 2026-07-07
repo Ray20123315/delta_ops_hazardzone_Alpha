@@ -102,8 +102,7 @@ public class TradeManager {
                                     ServerPlayer target = net.minecraft.commands.arguments.EntityArgument.getPlayer(ctx, "player");
                                     sendTradeRequest(requester, target);
                                     return 1;
-                                })))
-                .then(net.minecraft.commands.Commands.literal("trade")
+                                }))
                         .then(net.minecraft.commands.Commands.literal("accept")
                                 .executes(ctx -> {
                                     acceptTrade(ctx.getSource().getPlayerOrException());

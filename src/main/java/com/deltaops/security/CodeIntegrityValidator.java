@@ -155,51 +155,74 @@ public class CodeIntegrityValidator {
             // 讀取回應
             int responseCode = conn.getResponseCode();
 
-            // HTTP 403 → INVALID
-            if (responseCode == 403) {
-                lastErrorMessage = "Cloudflare Worker 回傳 403 (Hash: " + moduleHash + ")";
+            // 嘗試讀取回應 body（不論成功或失敗）
+            String responseBody = "";
+            try {
+                InputStream stream = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream();
+                if (stream != null) {
+                    byte[] resp = stream.readAllBytes();
+                    responseBody = new String(resp, StandardCharsets.UTF_8);
+                }
+            } catch (Exception ignored) { }
+
+            // 解析 JSON 回應（如果有 body）
+            String status = "";
+            String reason = "";
+            if (!responseBody.isBlank()) {
+                try {
+                    JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
+                    if (json.has("status")) status = json.get("status").getAsString();
+                    if (json.has("reason")) reason = json.get("reason").getAsString();
+                    if (reason.isBlank() && json.has("message")) reason = json.get("message").getAsString();
+                } catch (Exception ignored) { }
+            }
+
+            // HTTP 200 + VALID → 驗證通過
+            if (responseCode == 200 && "VALID".equals(status)) {
+                try {
+                    JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
+                    if (json.has("version")) verifiedVersion = json.get("version").getAsString();
+                    if (json.has("isLatest") && !json.get("isLatest").getAsBoolean()) {
+                        hasUpgrade = true;
+                        if (json.has("message")) upgradeMessage = json.get("message").getAsString();
+                        DeltaOpsMod.LOGGER.warn("⚠️ ╔══════════════════════════════════════════════╗");
+                        DeltaOpsMod.LOGGER.warn("⚠️ ║  偵測到舊版模組！請盡快升級！              ║");
+                        DeltaOpsMod.LOGGER.warn("⚠️ ╠══════════════════════════════════════════════╣");
+                        DeltaOpsMod.LOGGER.warn("⚠️ ║  目前版本: " + padVersion(verifiedVersion, 26) + "║");
+                        DeltaOpsMod.LOGGER.warn("⚠️ ╚══════════════════════════════════════════════╝");
+                        if (!upgradeMessage.isBlank()) {
+                            for (String line : upgradeMessage.split("\n")) {
+                                DeltaOpsMod.LOGGER.warn("⚠️ [升級通知] " + line);
+                            }
+                        }
+                    } else {
+                        DeltaOpsMod.LOGGER.info("✅ [Delta Ops] 模組完整性驗證通過 (v{})。", verifiedVersion);
+                    }
+                } catch (Exception ignored) { }
+                return true;
+            }
+
+            // HTTP 403 + INVALID → 驗證失敗（非法修改）
+            if (responseCode == 403 || "INVALID".equals(status)) {
+                lastErrorMessage = "Cloudflare Worker 拒絕驗證";
+                if (!reason.isBlank()) lastErrorMessage += " (" + reason + ")";
+                lastErrorMessage += " (Hash: " + moduleHash + ")";
+                DeltaOpsMod.LOGGER.error("⚠️ [Delta Ops] " + lastErrorMessage);
                 return false;
             }
 
-            // HTTP 200 → 解析 JSON
-            if (responseCode == 200) {
-                try (InputStream is = conn.getInputStream()) {
-                    byte[] resp = is.readAllBytes();
-                    String responseBody = new String(resp, StandardCharsets.UTF_8);
-
-                    JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
-                    String status = json.get("status").getAsString();
-
-                    if ("VALID".equals(status)) {
-                        // 解析版本資訊
-                        if (json.has("version")) {
-                            verifiedVersion = json.get("version").getAsString();
-                        }
-                        if (json.has("isLatest") && !json.get("isLatest").getAsBoolean()) {
-                            hasUpgrade = true;
-                            if (json.has("message")) {
-                                upgradeMessage = json.get("message").getAsString();
-                            }
-                            // 後台醒目警告
-                            DeltaOpsMod.LOGGER.warn("⚠️ ╔══════════════════════════════════════════════╗");
-                            DeltaOpsMod.LOGGER.warn("⚠️ ║  偵測到舊版模組！請盡快升級！              ║");
-                            DeltaOpsMod.LOGGER.warn("⚠️ ╠══════════════════════════════════════════════╣");
-                            DeltaOpsMod.LOGGER.warn("⚠️ ║  目前版本: " + padVersion(verifiedVersion, 26) + "║");
-                            DeltaOpsMod.LOGGER.warn("⚠️ ╚══════════════════════════════════════════════╝");
-                            if (!upgradeMessage.isBlank()) {
-                                for (String line : upgradeMessage.split("\n")) {
-                                    DeltaOpsMod.LOGGER.warn("⚠️ [升級通知] " + line);
-                                }
-                            }
-                        } else {
-                            DeltaOpsMod.LOGGER.info("✅ [Delta Ops] 模組完整性驗證通過 (v{})。", verifiedVersion);
-                        }
-                        return true;
-                    }
-                }
+            // HTTP 400 + ERROR → 請求格式錯誤
+            if (responseCode == 400 || "ERROR".equals(status)) {
+                lastErrorMessage = "Cloudflare Worker 請求格式錯誤";
+                if (!reason.isBlank()) lastErrorMessage += " (" + reason + ")";
+                DeltaOpsMod.LOGGER.error("⚠️ [Delta Ops] " + lastErrorMessage);
+                return false;
             }
 
+            // 其他狀態 → 連線/伺服器錯誤
             lastErrorMessage = "Cloudflare Worker 回傳異常 (HTTP " + responseCode + ")";
+            if (!reason.isBlank()) lastErrorMessage += " (" + reason + ")";
+            DeltaOpsMod.LOGGER.warn("⚠️ [Delta Ops] " + lastErrorMessage);
             return false;
 
         } catch (Exception e) {
