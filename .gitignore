@@ -23,3 +23,17 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
+
+# Debug / build logs
+build_errors.txt
+build_errors_clean.txt
+
+# IDE - VSCode
+.vscode
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Local release notes (already in docs/ or separate)
+release-notes.md
