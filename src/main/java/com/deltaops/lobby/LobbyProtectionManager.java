@@ -37,8 +37,9 @@ public class LobbyProtectionManager {
         if (!(event.getEntity() instanceof ServerPlayer player)) {
             return;
         }
-        // 允許 /kill 指令（OUT_OF_WORLD 傷害來源），方便管理員除錯
-        if (event.getSource().getMsgId().equals("outOfWorld")) {
+        // 不取消會直接致死的傷害（包含 /kill 與任何致死傷害）
+        // 這樣管理員在大廳依然可以用 /kill 或高傷害方式除錯
+        if (event.getAmount() >= player.getHealth() + player.getAbsorptionAmount()) {
             return;
         }
         if (LobbyArea.isInLobby(player)) {
