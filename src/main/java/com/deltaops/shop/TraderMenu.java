@@ -6,6 +6,7 @@
 package com.deltaops.shop;
 
 import com.deltaops.lobby.EconomyManager;
+import com.deltaops.screen.ModMenuTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +22,7 @@ public class TraderMenu extends AbstractContainerMenu {
     private final ServerPlayer player;
 
     public TraderMenu(int id, Inventory inventory) {
-        super(null, id);
+        super(ModMenuTypes.TRADER.get(), id);
         this.player = (ServerPlayer) inventory.player;
 
         // 從 TraderData 載入商人商品

@@ -42,7 +42,9 @@ public class SquadMainScreen extends Screen {
         targetNameInput = new EditBox(font, centerX - 110, top + 24, 220, 20, Component.literal("玩家名稱"));
         targetNameInput.setValue("");
         targetNameInput.setHint(Component.literal("輸入玩家名稱"));
+        targetNameInput.setCanLoseFocus(true);
         addRenderableWidget(targetNameInput);
+        setInitialFocus(targetNameInput);
         addRenderableWidget(Button.builder(Component.literal("建立小隊"), btn -> sendAction(ServerboundSquadActionPacket.Action.CREATE, null)).bounds(centerX - 210, top + 60, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("離開小隊"), btn -> sendAction(ServerboundSquadActionPacket.Action.LEAVE, null)).bounds(centerX - 105, top + 60, 100, 20).build());
         addRenderableWidget(Button.builder(Component.literal("切換準備"), btn -> sendAction(ServerboundSquadActionPacket.Action.TOGGLE_READY, null)).bounds(centerX + 5, top + 60, 100, 20).build());

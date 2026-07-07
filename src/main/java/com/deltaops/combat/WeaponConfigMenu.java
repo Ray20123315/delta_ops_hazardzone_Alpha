@@ -5,6 +5,7 @@
  */
 package com.deltaops.combat;
 
+import com.deltaops.screen.ModMenuTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +30,7 @@ public class WeaponConfigMenu extends AbstractContainerMenu {
     private final ServerPlayer player;
 
     public WeaponConfigMenu(int id, Inventory inventory) {
-        super(null, id);
+        super(ModMenuTypes.WEAPON_CONFIG.get(), id);
         this.player = (ServerPlayer) inventory.player;
 
         // 載入已設定的物品（唯讀顯示用，實際操作透過 insert/extract）

@@ -22,6 +22,37 @@
 -keep @org.spongepowered.asm.mixin.Mixin class * { *; }
 
 # ============================================================
+# 3. 保留 Gson 序列化/反序列化的資料類別（欄位名稱不可被混淆）
+# ============================================================
+
+# LocationDatabase — 所有內部類別（GlobalLobby, SpawnPoint, DataStore）
+-keep class com.deltaops.location.LocationDatabase$* { <fields>; }
+-keep class com.deltaops.location.LocationDatabase$DataStore { *; }
+
+# EconomyManager — 物價資料結構
+-keep class com.deltaops.lobby.EconomyManager { *; }
+
+# 所有 Gson 反序列化的 TypeToken 類別
+-keepattributes Signature
+-keepattributes *Annotation*
+
+# ============================================================
+# 4. 保留所有選單 / Screen / MenuType（避免 Unable to construct this menu by type）
+# ============================================================
+
+# 直接排除整個選單相關套件的混淆
+-keep class com.deltaops.shop.** { *; }
+-keep class com.deltaops.combat.** { *; }
+-keep class com.deltaops.screen.** { *; }
+-keep class com.deltaops.inventory.** { *; }
+-keep class com.deltaops.weapon.WeaponWorkbenchMenu { *; }
+-keep class com.deltaops.securebox.** { *; }
+-keep class com.deltaops.admin.AdminConfigMenu { *; }
+-keep class com.deltaops.admin.AdminConfigScreen { *; }
+-keep class com.deltaops.loot.AdminItemTaggingMenu { *; }
+-keep class com.deltaops.loot.AdminItemTaggingScreen { *; }
+
+# ============================================================
 # 2. 保留 ForgeGradle 重新混淆所需的結構
 # ============================================================
 

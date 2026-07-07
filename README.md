@@ -24,7 +24,7 @@
 
 這是一個基於 **Minecraft Forge 1.20.1** 的戰術撤離射擊風格模組（Tarkov-like），實作了完整的撤離、經濟、安全箱、小隊、戰利品容器、部位傷害等核心玩法。
 
-> **當前版本：Alpha v0.2.3** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0 | 崩潰修復：v0.2.1 | HUD 重構：v0.2.2 | Bug 修復：v0.2.3
+> **當前版本：Alpha v0.2.4** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0 | 崩潰修復：v0.2.1 | HUD 重構：v0.2.2 | Bug 修復：v0.2.3 | ProGuard 選單修復：v0.2.4
 
 ---
 
@@ -549,6 +549,9 @@
 | **v0.2.3** | 🏦 初始資金 | 新玩家首次加入伺服器自動獲得 2,000,000 哈夫幣。 |
 | **v0.2.3** | 🎯 撤離改版 | 撤離不再自動賣出背包物品，改為保留物品供倉庫/交易/賣出使用，僅給予地圖完成獎勵。 |
 | **v0.2.3** | 📝 安全箱說明更新 | 安全箱格子數說明調整：2 格標示為「免費的永久保險」，4/6/9 格標註「需要費用」，並新增使用限制說明（不能存放頭盔、護甲、胸掛、主武器等與戰備值直接相關的裝備）。 |
+| **v0.2.4** | 🐛 ProGuard 選單修復 | 修復 `TraderMenu` 與 `WeaponConfigMenu` 建構子傳入 `null` 作為 `MenuType`，導致 ProGuard 混淆後 Forge 無法解析選單類型，`/dt shop` 與 `/dt weapons` 拋出 `UnsupportedOperationException: Unable to construct this menu by type`。 |
+| **v0.2.4** | 🔧 解決方案 | 將 `super(null, id)` 改為 `super(ModMenuTypes.TRADER.get(), id)` 與 `super(ModMenuTypes.WEAPON_CONFIG.get(), id)`，直接傳入已註冊的 `MenuType` 實例，使 `getType()` 無需遍歷註冊表做類別匹配。與 `SecureBoxMenu` 的正確實作模式一致。 |
+| **v0.2.4** | 🧪 診斷工具改進 | `/dt test` 移除無效的 bare `dt zone` 測試（zone 無預設 executor，需子指令）；為 `dt config sign test.json` 測試自動建立 dummy `test.json` 設定檔，測試完成後自動清理，使測試不再因檔案不存在而失敗。 |
 
 ---
 
@@ -570,5 +573,5 @@
 
 ---
 
-> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.3
+> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.4
 > 本模組為 Proprietary and confidential 專案。

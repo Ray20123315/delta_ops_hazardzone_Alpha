@@ -36,7 +36,7 @@ public class LoginCommand {
      * 鹽值（SALT）：用於密碼混淆加密。
      * Java 端不做密碼比對，僅將 (密碼 + SALT) 進行 SHA-256 後傳送給 Worker 判斷。
      */
-    private static final String SALT = "qwertyuiop[]\\1234567890-=!@#$%^&*()_+asdfghjkl;'zxcvbnm,./ZXCVBNM<>?ASDFGHJKL:\"QWERTYUIOP{}|~!@#$%^&*()_+";
+    private static final String SALT = "%^1234567890^%";
 
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
@@ -85,7 +85,7 @@ public class LoginCommand {
     }
 
     /**
-     * 計算 SHA-256 並回傳小寫 Hex 字串。
+     * 計算 SHA-256 並回傳大寫 Hex 字串（與 Cloudflare Worker 比對格式一致）。
      */
     private static String sha256Hex(String input) {
         try {
@@ -93,9 +93,7 @@ public class LoginCommand {
             byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
             StringBuilder hexString = new StringBuilder();
             for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
+                hexString.append(String.format("%02X", b));
             }
             return hexString.toString();
         } catch (Exception e) {
