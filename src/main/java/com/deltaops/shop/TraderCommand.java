@@ -6,6 +6,7 @@
 package com.deltaops.shop;
 
 import com.deltaops.DeltaOpsMod;
+import com.deltaops.lobby.LobbySquadManager;
 import com.deltaops.screen.ModMenuTypes;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -30,6 +31,13 @@ public class TraderCommand {
                 .then(Commands.literal("shop")
                         .executes(ctx -> {
                             ServerPlayer player = ctx.getSource().getPlayerOrException();
+
+                            // 準備中禁止開啟商店
+                            if (LobbySquadManager.isPlayerReady(player)) {
+                                player.sendSystemMessage(Component.literal("§c準備狀態下無法開啟商店！請先取消準備。"));
+                                return 0;
+                            }
+
                             NetworkHooks.openScreen(player, new MenuProvider() {
                                 @Override
                                 public Component getDisplayName() {

@@ -34,7 +34,7 @@ public class VerificationManager {
     public static boolean isVerified = false;
 
     /** 開發環境時使用的測試 Hash */
-    private static final String DEV_TEST_HASH = "DEV_TEST_HASH";
+    private static final String DEV_TEST_HASH = "0A6616C16D929C01C98A647E45AC616BF56D5FC5D9C56CD1213825509652BC9E";
 
     /** 當前模組的 SHA-256 Hash（快取，避免重複計算） */
     private static String moduleHash = null;

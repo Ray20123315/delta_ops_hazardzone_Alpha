@@ -51,7 +51,19 @@
   "tooltip.delta_ops.tourniquet": "§a使用：停止流血",
 
   "key.category.delta_ops": "三角洲行動",
+  "key.category.delta_ops_hazardzone.tactical": "三角洲戰術",
   "key.delta_ops.open_inventory": "開啟戰術背包",
   "key.delta_ops.open_secure": "開啟安全箱",
-  "key.delta_ops.rotate": "旋轉物品"
+  "key.delta_ops.rotate": "旋轉物品",
+  "key.delta_ops_hazardzone.open_secure_box": "開啟安全箱",
+  "key.delta_ops_hazardzone.open_menu": "開啟小隊面板",
+  "key.delta_ops_hazardzone.open_stash": "開啟倉庫",
+  "key.delta_ops_hazardzone.open_shop": "開啟商店",
+  "key.delta_ops_hazardzone.open_quests": "開啟任務面板",
+  "key.delta_ops_hazardzone.open_skills": "開啟技能面板",
+  "key.delta_ops_hazardzone.open_sellgui": "開啟賣出介面",
+  "key.delta_ops_hazardzone.open_balance": "查詢餘額",
+  "key.delta_ops_hazardzone.open_admin_config": "開啟管理員設定",
+  "key.delta_ops_hazardzone.open_admin_items": "開啟戰利品編輯器",
+  "key.delta_ops_hazardzone.open_diag": "開啟診斷報告"
 }

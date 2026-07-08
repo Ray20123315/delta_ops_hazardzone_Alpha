@@ -6,16 +6,16 @@
 package com.deltaops.inventory;
 
 import com.deltaops.DeltaOpsMod;
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
- * 倉庫畫面：9x6 網格，顯示倉庫+背包
+ * 倉庫畫面：9x6 網格，顯示倉庫+背包，含快速賣出按鈕
  */
 public class WarehouseScreen extends AbstractContainerScreen<WarehouseMenu> {
 
@@ -24,8 +24,8 @@ public class WarehouseScreen extends AbstractContainerScreen<WarehouseMenu> {
 
     public WarehouseScreen(WarehouseMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
-        this.imageWidth = 176;
-        this.imageHeight = 222;
+        this.imageWidth = 200;
+        this.imageHeight = 230;
     }
 
     @Override
@@ -33,11 +33,38 @@ public class WarehouseScreen extends AbstractContainerScreen<WarehouseMenu> {
         super.init();
         this.titleLabelX = 8;
         this.titleLabelY = 6;
+
+        int cx = this.width / 2;
+        int by = this.height - 30;
+
+        // 快速賣出按鈕
+        addRenderableWidget(Button.builder(
+                Component.literal("💰 一鍵賣出"),
+                btn -> sellAllItems()
+        ).bounds(cx - 100, by, 95, 20).build());
+
+        // 前往賣出GUI
+        addRenderableWidget(Button.builder(
+                Component.literal("📤 賣出 GUI"),
+                btn -> openSellGui()
+        ).bounds(cx + 5, by, 95, 20).build());
+    }
+
+    private void sellAllItems() {
+        if (minecraft != null && minecraft.player != null) {
+            minecraft.player.connection.sendCommand("dt stash sell");
+            minecraft.player.sendSystemMessage(Component.literal("§a已執行一鍵賣出！"));
+        }
+    }
+
+    private void openSellGui() {
+        if (minecraft != null && minecraft.player != null) {
+            minecraft.player.connection.sendCommand("dt stash sellgui");
+        }
     }
 
     @Override
     protected void renderBg(GuiGraphics gui, float partialTick, int mouseX, int mouseY) {
-        // 深色背景
         gui.fill(0, 0, width, height, 0xCC000000);
 
         int x = (width - imageWidth) / 2;
@@ -46,10 +73,10 @@ public class WarehouseScreen extends AbstractContainerScreen<WarehouseMenu> {
         // 倉庫區域背景
         gui.fill(x, y, x + imageWidth, y + 130, 0xFF2B2B2B);
         // 背包區域背景
-        gui.fill(x, y + 130, x + imageWidth, y + imageHeight, 0xFF1A1A1A);
+        gui.fill(x, y + 130, x + imageWidth, y + imageHeight - 30, 0xFF1A1A1A);
 
         // 標籤文字
-        gui.drawString(font, Component.literal("§6倉庫 (9x6)"), x + 8, y + 5, 0xFFFFFF);
+        gui.drawString(font, Component.literal("§6倉庫 (9×6)"), x + 8, y + 5, 0xFFFFFF);
         gui.drawString(font, Component.literal("§7背包"), x + 8, y + 128, 0xAAAAAA);
     }
 

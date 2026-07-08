@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 @Mod(DeltaOpsMod.MOD_ID)
 public class DeltaOpsMod {
     public static final String MOD_ID = "delta_ops_hazardzone";
+    public static final String MOD_VERSION = "0.2.4";
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public DeltaOpsMod() {

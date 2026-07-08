@@ -6,6 +6,7 @@
 package com.deltaops.inventory;
 
 import com.deltaops.DeltaOpsMod;
+import com.deltaops.lobby.LobbySquadManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -23,6 +24,14 @@ import net.minecraftforge.network.NetworkHooks;
 @Mod.EventBusSubscriber(modid = DeltaOpsMod.MOD_ID)
 public class StashCommand {
 
+    private static boolean checkReady(ServerPlayer player) {
+        if (LobbySquadManager.isPlayerReady(player)) {
+            player.sendSystemMessage(Component.literal("§c準備狀態下無法使用倉庫功能！請先取消準備。"));
+            return true;
+        }
+        return false;
+    }
+
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         var d = event.getDispatcher();
@@ -30,6 +39,7 @@ public class StashCommand {
                 .then(net.minecraft.commands.Commands.literal("stash")
                         .executes(ctx -> {
                             ServerPlayer player = ctx.getSource().getPlayerOrException();
+                            if (checkReady(player)) return 0;
                             NetworkHooks.openScreen(player, new MenuProvider() {
                                 @Override
                                 public Component getDisplayName() {
@@ -46,7 +56,7 @@ public class StashCommand {
                 .then(net.minecraft.commands.Commands.literal("sell")
                         .executes(ctx -> {
                             ServerPlayer player = ctx.getSource().getPlayerOrException();
-                            // 一鍵賣出所有倉庫物品
+                            if (checkReady(player)) return 0;
                             long total = WarehouseManager.sellAll(player);
                             player.sendSystemMessage(Component.literal("§a已賣出所有倉庫物品，獲得 " + total + " 哈夫幣！"));
                             return 1;
@@ -54,6 +64,7 @@ public class StashCommand {
                 .then(net.minecraft.commands.Commands.literal("sellgui")
                         .executes(ctx -> {
                             ServerPlayer player = ctx.getSource().getPlayerOrException();
+                            if (checkReady(player)) return 0;
                             NetworkHooks.openScreen(player, new MenuProvider() {
                                 @Override
                                 public Component getDisplayName() {

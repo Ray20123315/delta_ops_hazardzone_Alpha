@@ -6,6 +6,7 @@
 package com.deltaops.inventory;
 
 import com.deltaops.DeltaOpsMod;
+import com.deltaops.lobby.LobbySquadManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -99,6 +100,13 @@ public class TradeManager {
                         .then(net.minecraft.commands.Commands.argument("player", net.minecraft.commands.arguments.EntityArgument.player())
                                 .executes(ctx -> {
                                     ServerPlayer requester = ctx.getSource().getPlayerOrException();
+
+                                    // 準備中禁止交易
+                                    if (LobbySquadManager.isPlayerReady(requester)) {
+                                        requester.sendSystemMessage(Component.literal("§c準備狀態下無法發起交易！請先取消準備。"));
+                                        return 0;
+                                    }
+
                                     ServerPlayer target = net.minecraft.commands.arguments.EntityArgument.getPlayer(ctx, "player");
                                     sendTradeRequest(requester, target);
                                     return 1;

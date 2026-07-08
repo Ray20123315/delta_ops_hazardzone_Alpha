@@ -6,6 +6,7 @@
 package com.deltaops.skill;
 
 import com.deltaops.DeltaOpsMod;
+import com.deltaops.lobby.LobbySquadManager;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
@@ -30,7 +31,13 @@ public class SkillCommand {
                 .then(Commands.literal("skills")
                         .executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
-                            // 客戶端處理 GUI 開啟
+
+                            // 準備中禁止查看技能
+                            if (LobbySquadManager.isPlayerReady(player)) {
+                                player.sendSystemMessage(Component.literal("§c準備狀態下無法查看技能！請先取消準備。"));
+                                return 0;
+                            }
+
                             player.sendSystemMessage(Component.literal("§e=== 技能面板 ==="));
                             player.sendSystemMessage(Component.literal("§7技能點數：§6" + SkillManager.getSkillPoints(player)));
                             for (var entry : SkillManager.SKILLS.entrySet()) {
@@ -49,6 +56,12 @@ public class SkillCommand {
                         .then(Commands.argument("skillId", StringArgumentType.word())
                                 .executes(context -> {
                                     ServerPlayer player = context.getSource().getPlayerOrException();
+
+                                    // 準備中禁止升級技能
+                                    if (LobbySquadManager.isPlayerReady(player)) {
+                                        player.sendSystemMessage(Component.literal("§c準備狀態下無法升級技能！請先取消準備。"));
+                                        return 0;
+                                    }
                                     String skillId = StringArgumentType.getString(context, "skillId");
                                     if (!SkillManager.SKILLS.containsKey(skillId)) {
                                         player.sendSystemMessage(Component.literal("§c未知技能 ID！可用技能：" + String.join(", ", SkillManager.SKILLS.keySet())));

@@ -222,6 +222,11 @@ public class LobbySquadManager {
         return playerUuid != null && READY.getOrDefault(playerUuid, false);
     }
 
+    /** 檢查 ServerPlayer 是否已準備（方便其他指令調用） */
+    public static boolean isPlayerReady(ServerPlayer player) {
+        return player != null && isReady(player.getUUID());
+    }
+
     public static boolean isSquadReady(Squad squad) {
         if (squad == null) return false;
         for (UUID member : squad.members) {

@@ -192,6 +192,12 @@ public class EconomyManager {
         return ITEM_PRICES.getOrDefault(registryName.toString(), 0L);
     }
 
+    /** 根據物品 ID 查詢價格 */
+    public static long getItemPrice(String itemId) {
+        if (itemId == null || itemId.isBlank()) return 0L;
+        return ITEM_PRICES.getOrDefault(itemId, 0L);
+    }
+
     public static int getItemCount() {
         return ITEM_PRICES.size();
     }

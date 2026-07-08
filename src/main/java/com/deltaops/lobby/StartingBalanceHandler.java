@@ -31,8 +31,36 @@ public class StartingBalanceHandler {
                     "§6=== Delta Ops: Hazard Zone ==="));
             player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
                     "§e歡迎，特遣隊員！你的初始資金 §6" + STARTING_BALANCE + " §e哈夫幣已入帳。"));
-            player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                    "§7使用 /dt menu 開啟小隊面板，/dt stash 開啟倉庫，/dt sellgui 賣出物品。"));
         }
+
+        // ===== 所有玩家登入時提示指令用法 =====
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(""));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                "§6§m========================================"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                "§6§l  Delta Ops: Hazard Zone  §7v" + DeltaOpsMod.MOD_VERSION));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                "§6§m========================================"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                "§e📋 常用指令:"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt menu §7- 開啟小隊面板（建立/邀請/準備/開始遊戲）"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt stash §7- 開啟個人倉庫（9×6 儲存空間）"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt shop §7- 開啟商人商店購買物品"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt sellgui §7- 賣出倉庫中的物品"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt quests §7- 查看每日任務"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt skills §7- 查看/升級技能"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt balance §7- 查詢哈夫幣餘額"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                " §a/dt trade <玩家> §7- 與其他玩家交易物品"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                "§6§m========================================"));
+        player.sendSystemMessage(net.minecraft.network.chat.Component.literal(""));
     }
 }

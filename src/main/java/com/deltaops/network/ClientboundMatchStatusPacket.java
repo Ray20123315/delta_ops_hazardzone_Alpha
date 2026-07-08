@@ -35,6 +35,9 @@ public class ClientboundMatchStatusPacket {
             if (mc.screen instanceof com.deltaops.client.matchmaking.MatchmakingScreen screen) {
                 screen.updateQueueStatus(packet.queuedPlayers, packet.matchOpen);
             }
+            if (mc.screen instanceof com.deltaops.client.squad.SquadMainScreen screen) {
+                screen.updateQueueStatus(packet.queuedPlayers, packet.matchOpen);
+            }
         });
         ctx.get().setPacketHandled(true);
     }

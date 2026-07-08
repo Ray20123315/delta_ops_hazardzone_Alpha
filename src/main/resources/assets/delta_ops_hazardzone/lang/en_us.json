@@ -55,5 +55,15 @@
   "key.delta_ops.open_inventory": "Open Tactical Backpack",
   "key.delta_ops.open_secure": "Open Secure Container",
   "key.delta_ops.rotate": "Rotate Item",
-  "key.delta_ops_hazardzone.open_secure_box": "Open Secure Box"
+  "key.delta_ops_hazardzone.open_secure_box": "Open Secure Box",
+  "key.delta_ops_hazardzone.open_menu": "Open Squad Menu",
+  "key.delta_ops_hazardzone.open_stash": "Open Warehouse",
+  "key.delta_ops_hazardzone.open_shop": "Open Shop",
+  "key.delta_ops_hazardzone.open_quests": "Open Quests",
+  "key.delta_ops_hazardzone.open_skills": "Open Skills",
+  "key.delta_ops_hazardzone.open_sellgui": "Open Sell GUI",
+  "key.delta_ops_hazardzone.open_balance": "Check Balance",
+  "key.delta_ops_hazardzone.open_admin_config": "Open Admin Config",
+  "key.delta_ops_hazardzone.open_admin_items": "Open Admin Item Tagger",
+  "key.delta_ops_hazardzone.open_diag": "Open Diagnostic Report"
 }
