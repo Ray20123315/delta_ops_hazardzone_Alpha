@@ -579,5 +579,45 @@
 
 ---
 
+# 🎖️ [Delta Ops: Hazard Zone (Alpha)]
+
+---
+
+## 👥 開發團隊名單 (Credits)
+
+本專案的所有代碼、美術資產、劇本玩法及品質測試均由以下團隊成員通力合作完成。點擊名稱即可跳轉至成員的個人主頁或 B 站空間：
+
+### 🛠️ 核心技術與開發 (Development)
+
+*   **主程式 / 模組製作 (Lead Developer)**
+    *   **Ray Chen**
+    *   🔗 GitHub: [@Ray20123315](https://github.com/Ray20123315)
+    *   📺 Bilibili: [點擊訪問個人空間](https://space.bilibili.com/3632314995182552)
+
+*   **KJs 腳本製作 (Script Developer)**
+    *   **清水_bit**
+    *   📺 Bilibili: [點擊訪問個人空間](https://space.bilibili.com/3493107423250899)
+
+### 🎨 美術與視覺設計 (Art & 3D Assets)
+
+*   **繪圖、模型設計 (3D Modeler & Artist)**
+    *   **黑凍清書**
+    *   📺 Bilibili: [點擊訪問個人空間](https://space.bilibili.com/387457335)
+
+### 🎮 企劃、測試與品質保證 (QA & Game Design)
+
+*   **遊戲企劃 / 核心測試 (Game Designer & Tester)**
+    *   **阿葉睡不醒QAQ**
+    *   📺 Bilibili: [點擊訪問個人空間](https://space.bilibili.com/544082942)
+
+*   **專業測試組 (Core Testers)**
+    *   **白小白-小白小-2號**
+        *   📺 Bilibili: [點擊訪問個人空間](https://space.bilibili.com/96070336)
+    *   **你說貓跑了** *(暫用QQ名稱，待更新B站暱稱)*
+        *   📺 Bilibili: [點擊訪問個人空間](https://space.bilibili.com/填入後續獲取的B站UID)
+    *   **耳桉** *(暫用QQ名稱，待更新B站暱稱)*
+        *   📺 Bilibili: [點擊訪問個人空間](https://space.bilibili.com/2103483287)
+
+---
 > **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.5
 > 本模組為 Proprietary and confidential 專案。
