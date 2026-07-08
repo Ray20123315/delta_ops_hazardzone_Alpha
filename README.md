@@ -24,7 +24,7 @@
 
 這是一個基於 **Minecraft Forge 1.20.1** 的戰術撤離射擊風格模組（Tarkov-like），實作了完整的撤離、經濟、安全箱、小隊、戰利品容器、部位傷害等核心玩法。
 
-> **當前版本：Alpha v0.2.4** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0 | 崩潰修復：v0.2.1 | HUD 重構：v0.2.2 | Bug 修復：v0.2.3 | ProGuard 選單修復：v0.2.4
+> **當前版本：Alpha v0.2.5** | 基底核心：v0.1.0 | 安全防護+戰鬥反饋+生態系統：v0.2.0 | 崩潰修復：v0.2.1 | HUD 重構：v0.2.2 | Bug 修復：v0.2.3 | GUI 大重寫：v0.2.4 | 按鍵綁定：v0.2.5
 
 ---
 
@@ -552,12 +552,12 @@
 | **v0.2.4** | 🐛 ProGuard 選單修復 | 修復 `TraderMenu` 與 `WeaponConfigMenu` 建構子傳入 `null` 作為 `MenuType`，導致 ProGuard 混淆後 Forge 無法解析選單類型，`/dt shop` 與 `/dt weapons` 拋出 `UnsupportedOperationException: Unable to construct this menu by type`。 |
 | **v0.2.4** | 🔧 解決方案 | 將 `super(null, id)` 改為 `super(ModMenuTypes.TRADER.get(), id)` 與 `super(ModMenuTypes.WEAPON_CONFIG.get(), id)`，直接傳入已註冊的 `MenuType` 實例，使 `getType()` 無需遍歷註冊表做類別匹配。與 `SecureBoxMenu` 的正確實作模式一致。 |
 | **v0.2.4** | 🧪 診斷工具改進 | `/dt test` 移除無效的 bare `dt zone` 測試（zone 無預設 executor，需子指令）；為 `dt config sign test.json` 測試自動建立 dummy `test.json` 設定檔，測試完成後自動清理，使測試不再因檔案不存在而失敗。 |
-| **v0.2.4** | 🖥️ 管理員 GUI 大重寫 | `AdminConfigMenu` 新增 6 格物品欄位 + 玩家背包 slots，修正 `super(null, id)` 為 `super(ModMenuTypes.ADMIN_CONFIG.get(), id)`，OP 限定 `stillValid`。新增第 4 頁「✎ 鐵砧價格編輯」：放入物品 → 點選 → 輸入數字價格 → Enter 儲存，支援批次儲存與清空欄位。 |
-| **v0.2.4** | 📖 登入指令指南 | 所有玩家（不限新舊）每次登入時顯示完整的 `/dt` 指令用法列表，含版本號。 |
-| **v0.2.4** | 🗂️ 小隊面板整合配對 | 將配對大廳功能直接整合至 `/dt menu` 小隊面板，即時顯示配對狀態與佇列人數。關閉 GUI（ESC）時不影響配對狀態，維持在佇列中。 |
-| **v0.2.4** | 📦 倉庫強化 | `WarehouseScreen` 新增「💰 一鍵賣出」與「📤 賣出 GUI」快捷按鈕，視窗尺寸加大。 |
-| **v0.2.4** | 🔒 準備狀態鎖定 | 玩家切換為「已準備」後，自動封鎖 `/dt shop`、`/dt stash`、`/dt sell`、`/dt sellgui`、`/dt trade`、`/dt skills`、`/dt skillup`，避免調整戰備造成 bug。 |
-| **v0.2.4** | ⌨️ 按鍵綁定擴充 | 新增 `M` 鍵（小隊面板）、倉庫、商店、任務、技能、賣出 GUI、餘額等快捷鍵，位於 Controls → Delta Ops Tactical。OP 額外擁有管理員設定、戰利品編輯器、診斷報告快捷鍵。 |
+| **v0.2.5** | 🖥️ 管理員 GUI 大重寫 | `AdminConfigMenu` 新增 6 格物品欄位 + 玩家背包 slots，修正 `super(null, id)` 為 `super(ModMenuTypes.ADMIN_CONFIG.get(), id)`，OP 限定 `stillValid`。新增第 4 頁「✎ 鐵砧價格編輯」：放入物品 → 點選 → 輸入數字價格 → Enter 儲存，支援批次儲存與清空欄位。 |
+| **v0.2.5** | 📖 登入指令指南 | 所有玩家（不限新舊）每次登入時顯示完整的 `/dt` 指令用法列表，含版本號。 |
+| **v0.2.5** | 🗂️ 小隊面板整合配對 | 將配對大廳功能直接整合至 `/dt menu` 小隊面板，即時顯示配對狀態與佇列人數。關閉 GUI（ESC）時不影響配對狀態，維持在佇列中。 |
+| **v0.2.5** | 📦 倉庫強化 | `WarehouseScreen` 新增「💰 一鍵賣出」與「📤 賣出 GUI」快捷按鈕，視窗尺寸加大。 |
+| **v0.2.5** | 🔒 準備狀態鎖定 | 玩家切換為「已準備」後，自動封鎖 `/dt shop`、`/dt stash`、`/dt sell`、`/dt sellgui`、`/dt trade`、`/dt skills`、`/dt skillup`，避免調整戰備造成 bug。 |
+| **v0.2.5** | ⌨️ 按鍵綁定擴充 | 新增 `M` 鍵（小隊面板）、倉庫、商店、任務、技能、賣出 GUI、餘額等快捷鍵，位於 Controls → Delta Ops Tactical。OP 額外擁有管理員設定、戰利品編輯器、診斷報告快捷鍵。 |
 
 ---
 
@@ -579,5 +579,5 @@
 
 ---
 
-> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.4
+> **Delta Ops: Hazard Zone** © 2026 ray20123315. All Rights Reserved. Version Alpha v0.2.5
 > 本模組為 Proprietary and confidential 專案。
